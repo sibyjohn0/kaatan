@@ -7,6 +7,23 @@
     <meta name="description" content="KAATAN — Electronic artist from Bangalore. Collaborator with Youngr. Building a universe.">
     <meta property="og:title" content="KAATAN — A Universe in Motion">
     <meta property="og:description" content="Electronic. Cinematic. Bangalore-born. Building a universe.">
+    <!-- Google Analytics GA4 — replace GA_MEASUREMENT_ID with your G-XXXXXXXX id -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'GA_MEASUREMENT_ID');
+
+        // Track outbound CTA clicks
+        function trackClick(label) {
+            gtag('event', 'cta_click', {
+                event_category: 'engagement',
+                event_label: label
+            });
+        }
+    </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
@@ -824,7 +841,7 @@
         </h1>
         <div class="hero-divider"><span>✦</span></div>
         <p class="hero-sub">A Universe in Motion</p>
-        <a href="#universe" class="hero-cta">Enter the World</a>
+        <a href="#universe" class="hero-cta" onclick="trackClick('hero_enter_world')">Enter the World</a>
     </div>
     <div class="scroll-hint">
         <span>Scroll</span>
@@ -934,11 +951,11 @@
     </iframe>
 
     <div class="platform-links reveal">
-        <a href="https://www.instagram.com/thisiskaatan/" target="_blank" class="p-link">&#8599;&nbsp; Instagram</a>
-        <a href="https://www.youtube.com/watch?v=NnNWp4HNBnQ" target="_blank" class="p-link">&#8599;&nbsp; YouTube</a>
-        <a href="https://open.spotify.com/artist/7d8b1UQfbu7Zcb0pHkibSh" target="_blank" class="p-link">&#8599;&nbsp; Spotify</a>
-        <a href="https://music.apple.com/us/artist/kaatan/1838439968" target="_blank" class="p-link">&#8599;&nbsp; Apple Music</a>
-        <a href="https://www.beatport.com/artist/kaatan/1393932" target="_blank" class="p-link">&#8599;&nbsp; Beatport</a>
+        <a href="https://www.instagram.com/thisiskaatan/" target="_blank" class="p-link" onclick="trackClick('instagram')">&#8599;&nbsp; Instagram</a>
+        <a href="https://www.youtube.com/watch?v=NnNWp4HNBnQ" target="_blank" class="p-link" onclick="trackClick('youtube')">&#8599;&nbsp; YouTube</a>
+        <a href="https://open.spotify.com/artist/7d8b1UQfbu7Zcb0pHkibSh" target="_blank" class="p-link" onclick="trackClick('spotify')">&#8599;&nbsp; Spotify</a>
+        <a href="https://music.apple.com/us/artist/kaatan/1838439968" target="_blank" class="p-link" onclick="trackClick('apple_music')">&#8599;&nbsp; Apple Music</a>
+        <a href="https://www.beatport.com/artist/kaatan/1393932" target="_blank" class="p-link" onclick="trackClick('beatport')">&#8599;&nbsp; Beatport</a>
     </div>
 </div>
 
@@ -1002,7 +1019,7 @@
             </ul>
         </div>
     </div>
-    <a href="https://wa.me/919870998944" target="_blank" class="cta-btn">Get in Touch &#8599;</a>
+    <a href="https://wa.me/919870998944" target="_blank" class="cta-btn" onclick="trackClick('whatsapp_cta')">Get in Touch &#8599;</a>
 </div>
 
 <!-- FOOTER -->
