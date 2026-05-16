@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KAATAN — A Universe in Motion</title>
+    <meta name="description" content="KAATAN — Electronic artist from Bangalore. Collaborator with Youngr. Building a universe.">
+    <meta property="og:title" content="KAATAN — A Universe in Motion">
+    <meta property="og:description" content="Electronic. Cinematic. Bangalore-born. Building a universe.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #000000;
+            --purple: #8B2FC9;
+            --cyan: #00D4FF;
+            --gold: #FFD700;
+            --white: #FFFFFF;
+            --dim: rgba(255,255,255,0.55);
+            --border: rgba(255,255,255,0.07);
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg);
+            color: var(--white);
+            font-family: 'Space Mono', monospace;
+            overflow-x: hidden;
+        }
+
+        /* ── NAV ── */
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 3rem;
+            transition: background 0.4s ease, border-color 0.4s ease;
+            border-bottom: 1px solid transparent;
+        }
+        nav.scrolled {
+            background: rgba(0,0,0,0.88);
+            backdrop-filter: blur(12px);
+            border-color: rgba(139,47,201,0.25);
+        }
+        .nav-logo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.8rem;
+            letter-spacing: 0.2em;
+            color: var(--white);
+            text-decoration: none;
+        }
+        .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+        .nav-links a {
+            color: var(--dim);
+            text-decoration: none;
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover { color: var(--cyan); }
+
+        /* ── HERO ── */
+        .hero {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .video-bg {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+        .video-bg iframe {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 177.78vh;
+            height: 100vh;
+            min-width: 100%;
+            min-height: 56.25vw;
+        }
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(0,0,0,0.15) 0%,
+                rgba(0,0,0,0.45) 40%,
+                rgba(0,0,0,0.92) 100%
+            );
+            z-index: 1;
+        }
+        .scanlines {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0,0,0,0.06) 2px,
+                rgba(0,0,0,0.06) 4px
+            );
+            pointer-events: none;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 3;
+            text-align: center;
+            padding: 0 1.5rem;
+        }
+        .hero-tag {
+            font-size: 0.65rem;
+            letter-spacing: 0.45em;
+            color: var(--cyan);
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            opacity: 0;
+            animation: fadeUp 1s ease 0.6s forwards;
+        }
+        .hero-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(5.5rem, 18vw, 17rem);
+            line-height: 0.88;
+            letter-spacing: 0.05em;
+            position: relative;
+            opacity: 0;
+            animation: fadeUp 1s ease 0.9s forwards;
+        }
+        .glitch { position: relative; display: inline-block; }
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+        }
+        .glitch::before {
+            color: var(--cyan);
+            animation: glitch1 5s infinite;
+            clip-path: polygon(0 0, 100% 0, 100% 38%, 0 38%);
+        }
+        .glitch::after {
+            color: var(--purple);
+            animation: glitch2 5s infinite;
+            clip-path: polygon(0 62%, 100% 62%, 100% 100%, 0 100%);
+        }
+        .hero-sub {
+            font-size: clamp(0.6rem, 1.4vw, 0.8rem);
+            letter-spacing: 0.55em;
+            color: var(--dim);
+            text-transform: uppercase;
+            margin-top: 1.5rem;
+            opacity: 0;
+            animation: fadeUp 1s ease 1.2s forwards;
+        }
+        .hero-cta {
+            display: inline-block;
+            margin-top: 2.5rem;
+            padding: 0.85rem 2.8rem;
+            border: 1px solid var(--cyan);
+            color: var(--cyan);
+            text-decoration: none;
+            font-size: 0.65rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            transition: all 0.3s;
+            opacity: 0;
+            animation: fadeUp 1s ease 1.5s forwards;
+        }
+        .hero-cta:hover { background: var(--cyan); color: #000; }
+        .scroll-hint {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.6rem;
+            opacity: 0;
+            animation: fadeUp 1s ease 2.2s forwards;
+        }
+        .scroll-hint span {
+            font-size: 0.55rem;
+            letter-spacing: 0.35em;
+            color: var(--dim);
+            text-transform: uppercase;
+        }
+        .scroll-line {
+            width: 1px;
+            height: 48px;
+            background: linear-gradient(to bottom, var(--cyan), transparent);
+            animation: pulse 2.2s ease-in-out infinite;
+        }
+
+        /* ── SHARED ── */
+        .container { max-width: 1360px; margin: 0 auto; padding: 8rem 3rem; }
+        .label {
+            font-size: 0.62rem;
+            letter-spacing: 0.42em;
+            color: var(--cyan);
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+        .big-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(3rem, 7vw, 7rem);
+            line-height: 1;
+            letter-spacing: 0.02em;
+        }
+
+        /* ── ABOUT ── */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6rem;
+            align-items: center;
+        }
+        .about-title {
+            background: linear-gradient(140deg, var(--white) 30%, var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .pivot-row {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin: 2rem 0 2.5rem;
+        }
+        .pivot-name {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.8rem;
+            letter-spacing: 0.1em;
+        }
+        .pivot-name.inga { color: var(--gold); }
+        .pivot-name.kaatan { color: var(--cyan); }
+        .pivot-arrow { font-size: 2rem; color: var(--purple); }
+        .body-text {
+            color: var(--dim);
+            line-height: 1.95;
+            font-size: 0.82rem;
+        }
+        .body-text p + p { margin-top: 1.1rem; }
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 3rem;
+            padding-top: 2.5rem;
+            border-top: 1px solid var(--border);
+        }
+        .stat-num {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.8rem;
+            color: var(--cyan);
+            display: block;
+            line-height: 1;
+        }
+        .stat-lbl {
+            font-size: 0.58rem;
+            letter-spacing: 0.2em;
+            color: var(--dim);
+            text-transform: uppercase;
+            margin-top: 0.4rem;
+        }
+
+        /* ── UNIVERSE ── */
+        .universe-wrap { padding-top: 2rem; }
+        .universe-header { text-align: center; margin-bottom: 4rem; }
+        .cards-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            border: 1px solid var(--border);
+        }
+        .u-card {
+            padding: 4rem 3rem;
+            position: relative;
+            overflow: hidden;
+            transition: background 0.4s;
+            border-right: 1px solid var(--border);
+        }
+        .u-card:last-child { border-right: none; }
+        .u-card:hover { background: rgba(255,255,255,0.025); }
+        .u-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+        }
+        .u-card.inga::before { background: linear-gradient(to right, var(--gold), transparent 80%); }
+        .u-card.kaatan::before { background: linear-gradient(to right, var(--cyan), var(--purple)); }
+        .card-name {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 5rem;
+            letter-spacing: 0.08em;
+            line-height: 1;
+            margin-bottom: 0.3rem;
+        }
+        .u-card.inga .card-name { color: var(--gold); }
+        .u-card.kaatan .card-name { color: var(--cyan); }
+        .card-meaning {
+            font-size: 0.6rem;
+            letter-spacing: 0.3em;
+            color: var(--dim);
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+        }
+        .card-body {
+            color: var(--dim);
+            font-size: 0.78rem;
+            line-height: 1.9;
+            margin-bottom: 2rem;
+        }
+        .tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .tag {
+            padding: 0.28rem 0.75rem;
+            font-size: 0.58rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+        }
+        .u-card.inga .tag { border: 1px solid rgba(255,215,0,0.3); color: rgba(255,215,0,0.7); }
+        .u-card.kaatan .tag { border: 1px solid rgba(0,212,255,0.3); color: rgba(0,212,255,0.7); }
+
+        /* ── MUSIC ── */
+        .music-wrap { text-align: center; }
+        .music-wrap .big-title { margin-bottom: 3rem; }
+        .spotify-frame {
+            display: block;
+            margin: 0 auto 2rem;
+            max-width: 720px;
+            width: 100%;
+        }
+        .platform-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        .p-link {
+            display: inline-block;
+            padding: 0.75rem 1.8rem;
+            border: 1px solid rgba(255,255,255,0.18);
+            color: var(--dim);
+            text-decoration: none;
+            font-size: 0.65rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            transition: all 0.3s;
+        }
+        .p-link:hover {
+            border-color: var(--purple);
+            color: var(--white);
+            background: rgba(139,47,201,0.12);
+        }
+
+        /* ── COLLABORATE ── */
+        .collab-wrap {
+            max-width: 1360px;
+            margin: 0 auto 8rem;
+            padding: 6rem 3rem;
+            border: 1px solid rgba(139,47,201,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        .collab-wrap::before {
+            content: '';
+            position: absolute;
+            top: -30%;
+            right: -15%;
+            width: 550px;
+            height: 550px;
+            background: radial-gradient(circle, rgba(139,47,201,0.13) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .collab-wrap::after {
+            content: '';
+            position: absolute;
+            bottom: -20%;
+            left: -10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(0,212,255,0.07) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .collab-intro { max-width: 680px; margin-bottom: 4rem; }
+        .collab-title {
+            background: linear-gradient(140deg, var(--white) 30%, var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .collab-intro p {
+            color: var(--dim);
+            font-size: 0.82rem;
+            line-height: 1.95;
+            margin-top: 1.5rem;
+        }
+        .collab-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 3.5rem;
+        }
+        .c-card {
+            padding: 2rem 1.8rem;
+            border: 1px solid var(--border);
+            transition: border-color 0.3s, background 0.3s;
+        }
+        .c-card:hover {
+            border-color: rgba(0,212,255,0.35);
+            background: rgba(0,212,255,0.03);
+        }
+        .c-icon { font-size: 1.8rem; margin-bottom: 1rem; }
+        .c-card h3 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.6rem;
+            letter-spacing: 0.1em;
+            color: var(--cyan);
+            margin-bottom: 0.8rem;
+        }
+        .c-card p { color: var(--dim); font-size: 0.75rem; line-height: 1.85; }
+        .cta-btn {
+            display: inline-block;
+            padding: 1rem 3.2rem;
+            background: var(--purple);
+            color: var(--white);
+            text-decoration: none;
+            font-size: 0.68rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            border: 1px solid var(--purple);
+            transition: all 0.3s;
+        }
+        .cta-btn:hover { background: transparent; color: var(--purple); }
+
+        /* ── FOOTER ── */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .footer-logo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2rem;
+            letter-spacing: 0.2em;
+        }
+        .footer-nav { display: flex; gap: 2rem; list-style: none; }
+        .footer-nav a {
+            color: var(--dim);
+            text-decoration: none;
+            font-size: 0.62rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            transition: color 0.3s;
+        }
+        .footer-nav a:hover { color: var(--cyan); }
+        .footer-copy { color: rgba(255,255,255,0.18); font-size: 0.58rem; letter-spacing: 0.15em; }
+
+        /* ── ANIMATIONS ── */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(28px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; transform: scaleY(1); }
+            50%       { opacity: 1;   transform: scaleY(1.05); }
+        }
+        @keyframes glitch1 {
+            0%,88%,100% { transform: translate(0); opacity: 0; }
+            89%  { transform: translate(-3px, 1px);  opacity: 0.75; }
+            91%  { transform: translate(3px, -1px);  opacity: 0; }
+            93%  { transform: translate(-2px, 2px);  opacity: 0.75; }
+            95%  { transform: translate(0);           opacity: 0; }
+        }
+        @keyframes glitch2 {
+            0%,82%,100% { transform: translate(0); opacity: 0; }
+            83%  { transform: translate(3px, 1px);   opacity: 0.75; }
+            85%  { transform: translate(-3px, -1px); opacity: 0; }
+            87%  { transform: translate(2px, -2px);  opacity: 0.75; }
+            89%  { transform: translate(0);           opacity: 0; }
+        }
+
+        /* Scroll reveal */
+        .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.85s ease, transform 0.85s ease; }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        .reveal-delay-1 { transition-delay: 0.15s; }
+        .reveal-delay-2 { transition-delay: 0.3s; }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 900px) {
+            nav { padding: 1.2rem 1.5rem; }
+            .nav-links { display: none; }
+            .container { padding: 5rem 1.5rem; }
+            .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+            .cards-grid { grid-template-columns: 1fr; }
+            .u-card { border-right: none; border-bottom: 1px solid var(--border); }
+            .u-card:last-child { border-bottom: none; }
+            .collab-cards { grid-template-columns: 1fr; }
+            .collab-wrap { padding: 3rem 1.5rem; }
+            footer { flex-direction: column; text-align: center; }
+            .stats-row { grid-template-columns: repeat(3, 1fr); }
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+    <a href="#" class="nav-logo">KAATAN</a>
+    <ul class="nav-links">
+        <li><a href="#about">Story</a></li>
+        <li><a href="#universe">Universe</a></li>
+        <li><a href="#music">Music</a></li>
+        <li><a href="#collaborate">Collaborate</a></li>
+    </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+    <div class="video-bg">
+        <iframe
+            src="https://www.youtube.com/embed/NnNWp4HNBnQ?autoplay=1&mute=1&loop=1&playlist=NnNWp4HNBnQ&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&playsinline=1&disablekb=1"
+            frameborder="0"
+            allow="autoplay; fullscreen"
+            allowfullscreen>
+        </iframe>
+    </div>
+    <div class="hero-overlay"></div>
+    <div class="scanlines"></div>
+    <div class="hero-content">
+        <p class="hero-tag">Bangalore &middot; Electronic &middot; Cinematic</p>
+        <h1 class="hero-title">
+            <span class="glitch" data-text="KAATAN">KAATAN</span>
+        </h1>
+        <p class="hero-sub">A Universe in Motion</p>
+        <a href="#universe" class="hero-cta">Enter the World</a>
+    </div>
+    <div class="scroll-hint">
+        <span>Scroll</span>
+        <div class="scroll-line"></div>
+    </div>
+</div>
+
+<!-- ABOUT -->
+<div class="container" id="about">
+    <div class="about-grid">
+        <div class="reveal">
+            <p class="label">The Story</p>
+            <h2 class="big-title about-title">From the<br>Inner World<br>to the Outer</h2>
+            <div class="pivot-row">
+                <span class="pivot-name inga">INGA</span>
+                <span class="pivot-arrow">&#8594;</span>
+                <span class="pivot-name kaatan">KAATAN</span>
+            </div>
+            <div class="stats-row">
+                <div>
+                    <span class="stat-num">S2</span>
+                    <span class="stat-lbl">NEXA Music Winner</span>
+                </div>
+                <div>
+                    <span class="stat-num">4+</span>
+                    <span class="stat-lbl">Cities Toured</span>
+                </div>
+                <div>
+                    <span class="stat-num">&#8734;</span>
+                    <span class="stat-lbl">Worlds Being Built</span>
+                </div>
+            </div>
+        </div>
+        <div class="reveal reveal-delay-1">
+            <div class="body-text">
+                <p>
+                    INGA isn't going away &mdash; she plays live. Intimate rooms, real audiences, folk-jazz-psychedelia that moves people from Goa to Delhi. The kind of artist that makes audiences sing back lyrics to songs they only just heard.
+                </p>
+                <p>
+                    But INGA was always the inner world. KAATAN is the outer one.
+                </p>
+                <p>
+                    A deliberate, intentional pivot into building a full universe: electronic, cinematic, a world with its own sonic architecture, visual language, and mythology. Already moving globally &mdash; a collaboration with UK producer Youngr, a live set in the Dubai Desert, music on shelves worldwide.
+                </p>
+                <p>
+                    This isn't a brand new artist asking you to take a leap of faith. This is an established, award-winning artist constructing the next, larger world on top of a real foundation.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- UNIVERSE -->
+<div class="container universe-wrap" id="universe">
+    <div class="universe-header">
+        <p class="label">Two Faces. One World.</p>
+        <h2 class="big-title reveal">The Universe</h2>
+    </div>
+    <div class="cards-grid reveal">
+        <div class="u-card inga">
+            <div class="card-name">INGA</div>
+            <p class="card-meaning">Tamil: "To be here" &middot; The Inner World &middot; Live</p>
+            <p class="card-body">
+                Folk, jazz, psychedelia. A voice that moves rooms. NEXA Music Season 2 winner. Tour-hardened, audience-connected, deeply rooted in the raw and the real. INGA is the intimate &mdash; the place where feeling lives on stage.
+            </p>
+            <div class="tags">
+                <span class="tag">Folk</span>
+                <span class="tag">Jazz</span>
+                <span class="tag">Psychedelia</span>
+                <span class="tag">Live</span>
+                <span class="tag">Ukulele</span>
+                <span class="tag">Poetry</span>
+            </div>
+        </div>
+        <div class="u-card kaatan">
+            <div class="card-name">KAATAN</div>
+            <p class="card-meaning">Electronic &middot; Cinematic &middot; The Outer World &middot; Global</p>
+            <p class="card-body">
+                132 BPM. Dubai Desert. Youngr. Global. KAATAN is the architecture &mdash; the cinematic, electronic expansion of a world that INGA built from the inside. This is the universe, fully realised and in motion.
+            </p>
+            <div class="tags">
+                <span class="tag">Electronic</span>
+                <span class="tag">Cinematic</span>
+                <span class="tag">Dance</span>
+                <span class="tag">Global</span>
+                <span class="tag">Audio-Visual</span>
+                <span class="tag">World-Building</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MUSIC -->
+<div class="container music-wrap" id="music">
+    <p class="label">Listen</p>
+    <h2 class="big-title reveal">The Music</h2>
+    <iframe
+        class="spotify-frame reveal"
+        src="https://open.spotify.com/embed/artist/5tREIyYrzkJk4Lv4KPLSy7?utm_source=generator&theme=0"
+        width="100%"
+        height="352"
+        frameBorder="0"
+        allowfullscreen=""
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+        loading="lazy">
+    </iframe>
+    <div class="platform-links reveal">
+        <a href="https://open.spotify.com/artist/5tREIyYrzkJk4Lv4KPLSy7" target="_blank" class="p-link">&#8599; Spotify</a>
+        <a href="https://music.apple.com/us/artist/kaatan/1838439968" target="_blank" class="p-link">&#8599; Apple Music</a>
+        <a href="https://www.beatport.com/artist/kaatan/1393932" target="_blank" class="p-link">&#8599; Beatport</a>
+        <a href="https://www.youtube.com/watch?v=NnNWp4HNBnQ" target="_blank" class="p-link">&#8599; Young Hearts (Video)</a>
+        <a href="https://www.instagram.com/thisiskaatan/" target="_blank" class="p-link">&#8599; Instagram</a>
+    </div>
+</div>
+
+<!-- COLLABORATE -->
+<div class="collab-wrap reveal" id="collaborate">
+    <div class="collab-intro">
+        <p class="label">Ground Floor</p>
+        <h2 class="big-title collab-title">Build the<br>Universe</h2>
+        <p>
+            The pivot is already in motion. The question isn't whether this world gets built &mdash; it's who's in the room when it lands. Not hired hands. Architects.
+        </p>
+    </div>
+    <div class="collab-cards">
+        <div class="c-card">
+            <div class="c-icon">&#9672;</div>
+            <h3>Collaborators</h3>
+            <p>Producers, composers, visual artists, directors who want to create inside a universe &mdash; not just contribute a single piece to it.</p>
+        </div>
+        <div class="c-card">
+            <div class="c-icon">&#9689;</div>
+            <h3>Booking Agents</h3>
+            <p>Who can hold both: INGA on stage and the KAATAN world being built around her. Someone who sees the singular as an opportunity.</p>
+        </div>
+        <div class="c-card">
+            <div class="c-icon">&#9671;</div>
+            <h3>AV Partners</h3>
+            <p>Obsessed with the space where sound and image become one continuous experience. Atmosphere over assets.</p>
+        </div>
+    </div>
+    <a href="https://www.instagram.com/thisiskaatan/" target="_blank" class="cta-btn">Get in Touch</a>
+</div>
+
+<!-- FOOTER -->
+<footer>
+    <div class="footer-logo">KAATAN</div>
+    <ul class="footer-nav">
+        <li><a href="https://www.instagram.com/thisiskaatan/" target="_blank">Instagram</a></li>
+        <li><a href="https://open.spotify.com/artist/5tREIyYrzkJk4Lv4KPLSy7" target="_blank">Spotify</a></li>
+        <li><a href="https://music.apple.com/us/artist/kaatan/1838439968" target="_blank">Apple Music</a></li>
+        <li><a href="https://www.beatport.com/artist/kaatan/1393932" target="_blank">Beatport</a></li>
+    </ul>
+    <p class="footer-copy">&copy; 2026 KAATAN &mdash; A Universe in Motion</p>
+</footer>
+
+<script>
+    // Nav scroll effect
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+        nav.classList.toggle('scrolled', window.scrollY > 80);
+    }, { passive: true });
+
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+            if (e.isIntersecting) {
+                e.target.classList.add('visible');
+                io.unobserve(e.target);
+            }
+        });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    reveals.forEach(el => io.observe(el));
+</script>
+</body>
+</html>
