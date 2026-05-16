@@ -465,6 +465,23 @@
         /* ── MUSIC ── */
         .music-wrap { text-align: center; }
         .music-wrap .big-title { margin-bottom: 3rem; }
+
+        .video-player-wrap {
+            position: relative;
+            width: 100%;
+            max-width: 860px;
+            margin: 0 auto 2.5rem;
+            aspect-ratio: 16 / 9;
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+        .video-player-wrap iframe {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+        }
+
         .spotify-frame {
             display: block;
             margin: 0 auto 2rem;
@@ -863,9 +880,21 @@
 
 <!-- MUSIC -->
 <div class="container music-wrap" id="music">
-    <p class="label">Listen</p>
+    <p class="label">Watch &amp; Listen</p>
     <h2 class="big-title reveal">The Music</h2>
     <div class="ornament reveal">Young Hearts &times; Youngr</div>
+
+    <!-- Playable YouTube video -->
+    <div class="video-player-wrap reveal">
+        <iframe
+            src="https://www.youtube.com/embed/NnNWp4HNBnQ?rel=0&modestbranding=1"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+        </iframe>
+    </div>
+
+    <!-- Playable Spotify embed -->
     <iframe
         class="spotify-frame reveal"
         src="https://open.spotify.com/embed/artist/7d8b1UQfbu7Zcb0pHkibSh?utm_source=generator&theme=0"
@@ -876,12 +905,13 @@
         allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
         loading="lazy">
     </iframe>
+
     <div class="platform-links reveal">
+        <a href="https://www.instagram.com/thisiskaatan/" target="_blank" class="p-link">&#8599;&nbsp; Instagram</a>
+        <a href="https://www.youtube.com/watch?v=NnNWp4HNBnQ" target="_blank" class="p-link">&#8599;&nbsp; YouTube</a>
         <a href="https://open.spotify.com/artist/7d8b1UQfbu7Zcb0pHkibSh" target="_blank" class="p-link">&#8599;&nbsp; Spotify</a>
         <a href="https://music.apple.com/us/artist/kaatan/1838439968" target="_blank" class="p-link">&#8599;&nbsp; Apple Music</a>
         <a href="https://www.beatport.com/artist/kaatan/1393932" target="_blank" class="p-link">&#8599;&nbsp; Beatport</a>
-        <a href="https://www.youtube.com/watch?v=NnNWp4HNBnQ" target="_blank" class="p-link">&#8599;&nbsp; Young Hearts (Video)</a>
-        <a href="https://www.instagram.com/thisiskaatan/" target="_blank" class="p-link">&#8599;&nbsp; Instagram</a>
     </div>
 </div>
 
