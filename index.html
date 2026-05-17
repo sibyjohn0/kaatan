@@ -527,10 +527,60 @@
             height: 100%;
         }
 
+        /* ── SPOTIFY SHOWCASE ── */
+        .spotify-showcase {
+            max-width: 720px;
+            margin: 0 auto 2.5rem;
+            position: relative;
+        }
+        .spotify-live-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1.2rem;
+        }
+        .spotify-live-bar span {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1rem;
+            letter-spacing: 0.35em;
+            color: var(--gold);
+        }
+        .live-dot {
+            width: 7px; height: 7px;
+            background: var(--red);
+            border-radius: 50%;
+            flex-shrink: 0;
+            animation: livePulse 1.4s ease-in-out infinite;
+        }
+        .live-dot:last-child { animation-delay: 0.7s; background: var(--pink); }
+        @keyframes livePulse {
+            0%, 100% { transform: scale(1);   opacity: 0.55; }
+            50%       { transform: scale(1.7); opacity: 1; }
+        }
+        .spotify-frame-wrap {
+            position: relative;
+            border: 1px solid rgba(212,146,14,0.5);
+            animation: embedGlow 3.5s ease-in-out infinite;
+        }
+        @keyframes embedGlow {
+            0%, 100% { box-shadow: 0 0 16px rgba(212,146,14,0.15), 0 0 40px rgba(201,59,30,0.08); }
+            50%       { box-shadow: 0 0 32px rgba(212,146,14,0.35), 0 0 70px rgba(201,59,30,0.18), inset 0 0 24px rgba(212,146,14,0.04); }
+        }
+        /* Corner brackets */
+        .sp-corner {
+            position: absolute;
+            width: 18px; height: 18px;
+            border-color: var(--gold);
+            border-style: solid;
+            z-index: 2;
+        }
+        .sp-corner.tl { top: -1px;    left: -1px;  border-width: 2px 0 0 2px; }
+        .sp-corner.tr { top: -1px;    right: -1px; border-width: 2px 2px 0 0; }
+        .sp-corner.bl { bottom: -1px; left: -1px;  border-width: 0 0 2px 2px; }
+        .sp-corner.br { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
         .spotify-frame {
             display: block;
-            margin: 0 auto 2rem;
-            max-width: 720px;
             width: 100%;
         }
         .platform-links {
@@ -1124,16 +1174,29 @@
     </div>
 
     <!-- Playable Spotify embed -->
-    <iframe
-        class="spotify-frame reveal"
-        src="https://open.spotify.com/embed/artist/7d8b1UQfbu7Zcb0pHkibSh?utm_source=generator&theme=0"
-        width="100%"
-        height="352"
-        frameBorder="0"
-        allowfullscreen=""
-        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-        loading="lazy">
-    </iframe>
+    <div class="spotify-showcase reveal">
+        <div class="spotify-live-bar">
+            <span class="live-dot"></span>
+            <span>Streaming Now</span>
+            <span class="live-dot"></span>
+        </div>
+        <div class="spotify-frame-wrap">
+            <div class="sp-corner tl"></div>
+            <div class="sp-corner tr"></div>
+            <div class="sp-corner bl"></div>
+            <div class="sp-corner br"></div>
+            <iframe
+                class="spotify-frame"
+                src="https://open.spotify.com/embed/artist/7d8b1UQfbu7Zcb0pHkibSh?utm_source=generator&theme=0"
+                width="100%"
+                height="352"
+                frameBorder="0"
+                allowfullscreen=""
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                loading="lazy">
+            </iframe>
+        </div>
+    </div>
 
     <div class="platform-links reveal">
         <a href="https://www.instagram.com/thisiskaatan/" target="_blank" class="p-link" onclick="trackClick('instagram')">&#8599;&nbsp; Instagram</a>
