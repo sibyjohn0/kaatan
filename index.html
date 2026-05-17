@@ -240,21 +240,42 @@
             animation: fadeUp 1s ease 0.9s forwards;
             color: var(--cream);
         }
-        .glitch { position: relative; display: inline-block; }
+        .glitch {
+            position: relative;
+            display: inline-block;
+            background: linear-gradient(90deg,
+                var(--gold)  0%,
+                var(--cream) 18%,
+                var(--red)   38%,
+                var(--gold)  58%,
+                var(--pink)  78%,
+                var(--gold)  100%
+            );
+            background-size: 280% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: kaatanFlow 8s linear 2s infinite;
+        }
         .glitch::before,
         .glitch::after {
             content: attr(data-text);
             position: absolute;
             top: 0; left: 0;
             width: 100%; height: 100%;
+            background: none;
+            -webkit-background-clip: initial;
+            background-clip: initial;
         }
         .glitch::before {
             color: var(--gold);
+            -webkit-text-fill-color: var(--gold);
             animation: glitch1 5s infinite;
             clip-path: polygon(0 0, 100% 0, 100% 38%, 0 38%);
         }
         .glitch::after {
             color: var(--red);
+            -webkit-text-fill-color: var(--red);
             animation: glitch2 5s infinite;
             clip-path: polygon(0 62%, 100% 62%, 100% 100%, 0 100%);
         }
@@ -364,10 +385,12 @@
             align-items: start;
         }
         .about-title {
-            background: linear-gradient(140deg, var(--cream) 20%, var(--gold) 60%, var(--red));
+            background: linear-gradient(140deg, var(--cream) 0%, var(--gold) 35%, var(--red) 65%, var(--pink) 100%);
+            background-size: 220% 220%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            animation: gradientBreath 7s ease-in-out infinite;
         }
         .pivot-row {
             display: flex;
@@ -559,10 +582,12 @@
         }
         .collab-intro { max-width: 680px; margin-bottom: 4rem; }
         .collab-title {
-            background: linear-gradient(140deg, var(--cream) 20%, var(--gold));
+            background: linear-gradient(140deg, var(--gold) 0%, var(--cream) 40%, var(--red) 80%, var(--gold) 100%);
+            background-size: 220% 220%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            animation: gradientBreath 7s ease-in-out 1.5s infinite;
         }
         .collab-intro p {
             color: var(--dim);
@@ -818,7 +843,7 @@
             #cursor-dot, #cursor-ring { display: block; }
         }
 
-        /* ── LETTER SPLIT ── */
+        /* ── LETTER SPLIT + SHIMMER ── */
         .split-letter {
             display: inline-block;
             opacity: 0;
@@ -826,6 +851,32 @@
             transition: opacity 0.45s ease, transform 0.45s ease;
         }
         .split-letter.in { opacity: 1; transform: translateY(0); }
+
+        [data-letters] { position: relative; overflow: hidden; }
+        [data-letters]::after {
+            content: '';
+            position: absolute;
+            top: -20%; left: -120%;
+            width: 65%; height: 140%;
+            background: linear-gradient(105deg, transparent 20%, rgba(245,197,24,0.2) 50%, transparent 80%);
+            transform: skewX(-15deg);
+            pointer-events: none;
+        }
+        [data-letters].shimmer::after { animation: titleShimmer 1s ease-out forwards; }
+
+        /* ── NEW KEYFRAMES ── */
+        @keyframes kaatanFlow {
+            0%   { background-position: 0% 0%; }
+            100% { background-position: 100% 0%; }
+        }
+        @keyframes gradientBreath {
+            0%, 100% { background-position: 0% 30%; }
+            50%       { background-position: 100% 70%; }
+        }
+        @keyframes titleShimmer {
+            0%   { left: -120%; }
+            100% { left: 150%; }
+        }
 
         /* ── SECTION DIVIDERS ── */
         .section-divider {
@@ -1214,10 +1265,26 @@
         [...el.childNodes].forEach(walk);
     }
 
+    const LETTER_PALETTE = ['#F5C518', '#E8698A', '#C93B1E', '#F5E6C8', '#0A7A70', '#F5C518'];
+
     function revealLetters(el) {
-        el.querySelectorAll('.split-letter').forEach((ltr, i) => {
+        const letters = el.querySelectorAll('.split-letter');
+        const count   = letters.length;
+        letters.forEach((ltr, i) => {
+            const color = LETTER_PALETTE[Math.floor((i / count) * (LETTER_PALETTE.length - 1))];
+            ltr.style.color = color;
             setTimeout(() => ltr.classList.add('in'), i * 38);
         });
+        const cascadeEnd = count * 38 + 80;
+        // Shimmer sweep after cascade
+        setTimeout(() => el.classList.add('shimmer'), cascadeEnd);
+        // Fade all letters back to cream
+        setTimeout(() => {
+            letters.forEach(ltr => {
+                ltr.style.transition = 'color 1.2s ease';
+                ltr.style.color = 'var(--cream)';
+            });
+        }, cascadeEnd + 500);
     }
 
     document.querySelectorAll('[data-letters]').forEach(splitIntoLetters);
