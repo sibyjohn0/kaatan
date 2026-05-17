@@ -26,7 +26,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Noto+Sans+Tamil:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
             /* Palette drawn from the Young Hearts music video */
@@ -328,17 +328,15 @@
         .scroll-hint {
             position: absolute;
             bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
+            left: 0; right: 0;
+            width: 100%;
             z-index: 3;
             display: flex;
             flex-direction: column;
             align-items: center;
-            text-align: center;
             gap: 0.6rem;
             opacity: 0;
             animation: fadeUp 1s ease 2.2s forwards;
-            white-space: nowrap;
         }
         .scroll-hint span {
             font-size: 0.52rem;
@@ -346,6 +344,7 @@
             color: var(--gold);
             text-transform: uppercase;
             display: block;
+            text-align: center;
         }
         .scroll-line {
             width: 1px;
@@ -873,6 +872,55 @@
             }
         }
 
+        /* ── MARQUEE STRIP ── */
+        .marquee-strip {
+            width: 100%;
+            overflow: hidden;
+            padding: 0.7rem 0;
+            background: rgba(201,59,30,0.14);
+            border-top: 1px solid rgba(201,59,30,0.35);
+            border-bottom: 1px solid rgba(201,59,30,0.35);
+        }
+        .marquee-track {
+            display: flex;
+            white-space: nowrap;
+            animation: marqueeScroll 35s linear infinite;
+        }
+        .marquee-track span {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 0.8rem;
+            letter-spacing: 0.32em;
+            color: var(--gold);
+            flex-shrink: 0;
+        }
+        @keyframes marqueeScroll {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* ── TAMIL HERO ACCENT ── */
+        .hero-tamil {
+            position: absolute;
+            right: clamp(1rem, 3vw, 3.5rem);
+            top: 50%;
+            transform: translateY(-50%);
+            writing-mode: vertical-rl;
+            font-family: 'Noto Sans Tamil', sans-serif;
+            font-size: clamp(0.9rem, 2vw, 1.6rem);
+            letter-spacing: 0.12em;
+            color: rgba(212,146,14,0.55);
+            z-index: 3;
+            opacity: 0;
+            animation: fadeUp 1s ease 2s forwards;
+            pointer-events: none;
+        }
+
+        /* ── RANGOLI DOT PATTERN ── */
+        .rangoli-bg {
+            background-image: radial-gradient(rgba(212,146,14,0.07) 1.5px, transparent 1.5px);
+            background-size: 26px 26px;
+        }
+
         /* ── CUSTOM CURSOR ── */
         #cursor-dot, #cursor-ring {
             display: none;
@@ -1045,6 +1093,7 @@
     </div>
     <div class="hero-overlay"></div>
     <div class="hero-vignette"></div>
+    <div class="hero-tamil">காட்டன்</div>
     <div class="hero-content">
         <p class="hero-tag">Bangalore &middot; Electronic &middot; Cinematic</p>
         <h1 class="hero-title">
@@ -1065,6 +1114,13 @@
         <span class="div-rule"></span>
         <span class="div-gem"><span></span></span>
         <span class="div-rule"></span>
+    </div>
+</div>
+
+<div class="marquee-strip" aria-hidden="true">
+    <div class="marquee-track">
+        <span>KAATAN &nbsp;·&nbsp; BANGALORE &nbsp;·&nbsp; ELECTRONIC &nbsp;·&nbsp; CINEMATIC &nbsp;·&nbsp; YOUNGR &times; KAATAN &nbsp;·&nbsp; NEXA MUSIC SEASON 2 &nbsp;·&nbsp; DUBAI DESERT LIVE &nbsp;·&nbsp; YOUNG HEARTS &nbsp;·&nbsp; காட்டன் &nbsp;·&nbsp; A UNIVERSE IN MOTION &nbsp;·&nbsp; INGA &nbsp;·&nbsp; BANGALORE &nbsp;·&nbsp; </span>
+        <span>KAATAN &nbsp;·&nbsp; BANGALORE &nbsp;·&nbsp; ELECTRONIC &nbsp;·&nbsp; CINEMATIC &nbsp;·&nbsp; YOUNGR &times; KAATAN &nbsp;·&nbsp; NEXA MUSIC SEASON 2 &nbsp;·&nbsp; DUBAI DESERT LIVE &nbsp;·&nbsp; YOUNG HEARTS &nbsp;·&nbsp; காட்டன் &nbsp;·&nbsp; A UNIVERSE IN MOTION &nbsp;·&nbsp; INGA &nbsp;·&nbsp; BANGALORE &nbsp;·&nbsp; </span>
     </div>
 </div>
 
@@ -1114,7 +1170,7 @@
 </div>
 
 <!-- UNIVERSE -->
-<div class="container universe-wrap" id="universe">
+<div class="container universe-wrap rangoli-bg" id="universe">
     <div class="universe-header">
         <p class="label">Two Faces. One World.</p>
         <h2 class="big-title" data-letters>The Universe</h2>
