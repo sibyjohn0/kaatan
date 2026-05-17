@@ -854,7 +854,16 @@
         }
         .split-letter.in { opacity: 1; transform: translateY(0); }
 
-        [data-letters] { position: relative; overflow: hidden; }
+        [data-letters] {
+            position: relative;
+            overflow: hidden;
+            text-shadow:
+                1px 1px 0 #6B3208,
+                2px 2px 0 #5A2806,
+                3px 3px 0 #4A2004,
+                4px 4px 0 #3A1802,
+                5px 6px 18px rgba(0,0,0,0.55);
+        }
         [data-letters]::after {
             content: '';
             position: absolute;
