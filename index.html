@@ -334,15 +334,18 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            text-align: center;
             gap: 0.6rem;
             opacity: 0;
             animation: fadeUp 1s ease 2.2s forwards;
+            white-space: nowrap;
         }
         .scroll-hint span {
             font-size: 0.52rem;
             letter-spacing: 0.35em;
-            color: var(--dim);
+            color: var(--gold);
             text-transform: uppercase;
+            display: block;
         }
         .scroll-line {
             width: 1px;
@@ -878,17 +881,18 @@
         [data-letters].gradient-active {
             background: linear-gradient(90deg,
                 var(--gold)  0%,
-                var(--red)   22%,
-                var(--pink)  44%,
-                var(--teal)  66%,
+                var(--red)   20%,
+                var(--cream) 38%,
+                var(--pink)  55%,
+                var(--red)   72%,
                 var(--gold)  88%,
                 var(--cream) 100%
             );
-            background-size: 280% 100%;
+            background-size: 300% 100%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            animation: headerFlow 12s linear infinite;
+            animation: headerFlow 10s linear infinite;
         }
         @keyframes headerFlow {
             0%   { background-position: 0% 0%; }
@@ -1294,7 +1298,7 @@
         [...el.childNodes].forEach(walk);
     }
 
-    const LETTER_PALETTE = ['#D4920E', '#E8907A', '#C93B1E', '#F5E6C8', '#0F7050', '#D4920E'];
+    const LETTER_PALETTE = ['#D4920E', '#C93B1E', '#F5E6C8', '#E8907A', '#C93B1E', '#D4920E'];
 
     function revealLetters(el) {
         const letters = el.querySelectorAll('.split-letter');
