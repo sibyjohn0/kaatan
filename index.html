@@ -37,7 +37,7 @@
             --pink:     #E8698A;          /* rose accent */
             --cream:    #F5E6C8;          /* warm text base */
             --white:    #FFFFFF;
-            --dim:      rgba(245,230,200,0.68);
+            --dim:      rgba(245,230,200,0.85);
             --border:   rgba(245,197,24,0.28);  /* gold-tinted border */
         }
 
@@ -461,8 +461,8 @@
             top: 0; left: 0; right: 0;
             height: 3px;
         }
-        .u-card.inga::before   { background: linear-gradient(to right, var(--pink) 0%, rgba(232,105,138,0.2) 70%, transparent); }
-        .u-card.kaatan::before { background: linear-gradient(to right, var(--gold) 0%, var(--red) 60%, transparent); }
+        .u-card.inga::before   { background: var(--pink); }
+        .u-card.kaatan::before { background: linear-gradient(to right, var(--gold), var(--red)); }
         /* Corner rose ornament */
         .u-card::after {
             content: '✿';
