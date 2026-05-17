@@ -1415,10 +1415,6 @@
     <div class="splash-sigil-wrap" id="splashSigil">
         <img class="splash-sigil-img" src="kaatan-sigil.png" alt="">
     </div>
-    <div class="splash-play-hint" id="splashPlayHint">
-        <div class="splash-play-icon">&#9654;</div>
-        <span class="splash-play-label">Tap to Play</span>
-    </div>
     <div class="splash-flare" id="splashFlare"></div>
 </div>
 
@@ -1906,40 +1902,42 @@
             }, 400);
         }
 
-        const playHint = document.getElementById('splashPlayHint');
-        let tapped = false;
-
-        function tapToPlay() {
-            if (tapped) return;
-            tapped = true;
-            sendCmd('unMute');
-            muted = false;
-            if (audioIcon) audioIcon.textContent = '🔊';
-            openSite();
-        }
-
-        // Phase 1 — Rose: 2s
-        // Phase 2 — Cross-fade to sigil, wait for tap
+        // Phase 1 — Rose: 2s → Phase 2 — Sigil: 2.5s → open site
         setTimeout(function () {
             rose.classList.add('out');
             sigil.classList.add('in');
-            // Show play hint after sigil fades in
-            setTimeout(function () {
-                if (playHint) playHint.classList.add('shown');
-            }, 950);
-            // Listen for tap anywhere on splash
-            splash.addEventListener('click', tapToPlay);
-            splash.addEventListener('touchend', function (e) { e.preventDefault(); tapToPlay(); });
-            // Fallback: auto-open after 8s without audio
-            setTimeout(function () { if (!tapped) { tapped = true; openSite(); } }, 8000);
+            setTimeout(openSite, 2500);
         }, 2000);
+
+        // Try to unmute immediately (works on Chrome for returning visitors)
+        setTimeout(function () { sendCmd('unMute'); }, 500);
+
+        // Unmute on first natural interaction (scroll, click, touch)
+        function firstInteraction() {
+            if (!muted) return;
+            sendCmd('unMute');
+            muted = false;
+            if (audioIcon) audioIcon.textContent = '🔊';
+            document.removeEventListener('click', firstInteraction);
+            document.removeEventListener('touchend', firstInteraction);
+            document.removeEventListener('scroll', firstInteraction);
+        }
+        document.addEventListener('click', firstInteraction, { passive: true });
+        document.addEventListener('touchend', firstInteraction, { passive: true });
+        document.addEventListener('scroll', firstInteraction, { passive: true });
 
         // ── AUDIO TOGGLE ──
         if (audioBtn) {
-            audioBtn.addEventListener('click', function () {
+            audioBtn.addEventListener('click', function (e) {
+                e.stopPropagation();
                 muted = !muted;
                 sendCmd(muted ? 'mute' : 'unMute');
                 if (audioIcon) audioIcon.textContent = muted ? '🔇' : '🔊';
+                if (!muted) {
+                    document.removeEventListener('click', firstInteraction);
+                    document.removeEventListener('touchend', firstInteraction);
+                    document.removeEventListener('scroll', firstInteraction);
+                }
             });
         }
     })();
