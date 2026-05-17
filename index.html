@@ -248,45 +248,35 @@
         .glitch {
             position: relative;
             display: inline-block;
-            background: linear-gradient(90deg,
-                #F7C520  0%,
-                #FFFFFF  14%,
-                #FFA040  30%,
-                #F7C520  48%,
-                #FFFFFF  62%,
-                #FF8C69  76%,
-                #F7C520  100%
-            );
-            background-size: 300% 100%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: kaatanFlow 7s linear 1.5s infinite;
-            /* dark vertical shadow lifts text off the video — no halo effect */
+            color: #F7C520;
+            -webkit-text-fill-color: #F7C520;
             text-shadow:
-                0 2px 6px rgba(0,0,0,0.95),
-                0 0 60px rgba(247,197,32,0.12);
+                0 0 45px rgba(247,197,32,0.7),
+                0 0 90px rgba(247,197,32,0.35),
+                0 2px 8px rgba(0,0,0,0.95);
+            animation: kaatanGlow 4s ease-in-out infinite;
             filter: none;
         }
         /* Tamil / Hindi state */
         .glitch.lang-script {
-            background: none;
+            color: #F7C520;
             -webkit-text-fill-color: #F7C520;
-            animation: none;
+            animation: kaatanGlow 4s ease-in-out infinite;
             filter: none;
             text-shadow:
-                0 2px 6px rgba(0,0,0,0.95),
-                0 0 40px rgba(247,197,32,0.2);
+                0 0 45px rgba(247,197,32,0.7),
+                0 0 90px rgba(247,197,32,0.35),
+                0 2px 8px rgba(0,0,0,0.95);
         }
         .glitch.lang-script::before { -webkit-text-fill-color: #F7C520; color: #F7C520; }
         .glitch.lang-script::after  { -webkit-text-fill-color: var(--pink); color: var(--pink); }
 
         /* glitch transition — runs alongside kaatanFlow */
         .glitch.switching {
-            animation: kaatanFlow 7s linear 1.5s infinite, glitchSwitch 0.55s ease-out forwards;
+            animation: kaatanGlow 4s ease-in-out infinite, glitchSwitch 0.55s ease-out forwards;
         }
         .glitch.switching.lang-script {
-            animation: glitchSwitch 0.55s ease-out forwards;
+            animation: kaatanGlow 4s ease-in-out infinite, glitchSwitch 0.55s ease-out forwards;
         }
         @keyframes glitchSwitch {
             0%   { transform: translate(0)          skewX(0);    opacity: 1;   }
@@ -1047,6 +1037,14 @@
             0%   { background-position: 0% 0%; }
             100% { background-position: 100% 0%; }
         }
+        @keyframes kaatanGlow {
+            0%, 100% {
+                text-shadow: 0 0 45px rgba(247,197,32,0.7), 0 0 90px rgba(247,197,32,0.35), 0 2px 8px rgba(0,0,0,0.95);
+            }
+            50% {
+                text-shadow: 0 0 65px rgba(247,197,32,0.95), 0 0 130px rgba(247,197,32,0.5), 0 2px 8px rgba(0,0,0,0.95);
+            }
+        }
         @keyframes gradientBreath {
             0%, 100% { background-position: 0% 30%; }
             50%       { background-position: 100% 70%; }
@@ -1106,6 +1104,121 @@
             display: flex;
             align-items: center;
             flex-shrink: 0;
+        }
+
+        /* ── VIDEO SHIELD (blocks YouTube overlay clicks) ── */
+        .video-shield {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+        }
+
+        /* ── NIGHT / DAY UNIVERSE CARDS ── */
+        .u-card.kaatan {
+            background:
+                radial-gradient(rgba(212,146,14,0.12) 1px, transparent 1px),
+                radial-gradient(rgba(212,146,14,0.06) 1px, transparent 1px),
+                linear-gradient(155deg, #090618 0%, #1C1038 55%, #0A0818 100%);
+            background-size: 42px 42px, 19px 19px, 100% 100%;
+            background-position: 0 0, 21px 21px, 0 0;
+        }
+        .u-card.kaatan:hover {
+            background:
+                radial-gradient(rgba(212,146,14,0.16) 1px, transparent 1px),
+                radial-gradient(rgba(212,146,14,0.09) 1px, transparent 1px),
+                linear-gradient(155deg, #0D0A22 0%, #221445 55%, #0D0A22 100%);
+            background-size: 42px 42px, 19px 19px, 100% 100%;
+            background-position: 0 0, 21px 21px, 0 0;
+        }
+        .u-card.kaatan::after { content: '✦'; }
+        .u-card.kaatan::before { background: linear-gradient(to right, #1C1038, var(--gold), var(--red)); }
+        .u-card.inga {
+            background: linear-gradient(155deg, #180C04 0%, #1A0E06 55%, #0C0808 100%);
+        }
+        .u-card.inga:hover {
+            background: linear-gradient(155deg, #201206 0%, #221408 55%, #100A06 100%);
+        }
+        .u-card.inga::before { background: linear-gradient(to right, var(--red), var(--pink), rgba(245,197,24,0.4)); }
+        .card-mode {
+            font-size: 0.5rem;
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            opacity: 0.55;
+        }
+        .u-card.kaatan .card-mode { color: var(--gold); }
+        .u-card.inga .card-mode { color: var(--pink); }
+
+        /* ── SIMPLIFIED COLLABORATE CARDS ── */
+        .collab-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 3.5rem;
+        }
+        .collab-card {
+            padding: 2.5rem 2rem;
+            border: 1px solid rgba(245,197,24,0.2);
+            position: relative;
+        }
+        .collab-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(to right, var(--gold), transparent 70%);
+        }
+        .collab-card-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.4rem;
+            letter-spacing: 0.06em;
+            color: var(--gold);
+            margin: 0.8rem 0 1rem;
+            line-height: 1.05;
+        }
+        .collab-card-body {
+            color: var(--dim);
+            font-size: 0.78rem;
+            line-height: 1.9;
+        }
+        @media (max-width: 700px) {
+            .collab-cards { grid-template-columns: 1fr; gap: 1rem; }
+            .collab-card { padding: 1.8rem 1.5rem; }
+            .collab-card-title { font-size: 2rem; }
+        }
+
+        /* ── SPLASH: TAP TO ENTER ── */
+        #splash { cursor: pointer; }
+        .splash-enter {
+            position: absolute;
+            bottom: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(0.85rem, 2.5vw, 1.1rem);
+            letter-spacing: 0.55em;
+            color: rgba(245,197,24,0.7);
+            white-space: nowrap;
+            animation: tapPulse 2.2s ease-in-out 1s infinite;
+            pointer-events: none;
+        }
+        @keyframes tapPulse {
+            0%, 100% { opacity: 0.25; }
+            50% { opacity: 1; }
+        }
+
+        /* ── MOBILE LENGTH REDUCTION ── */
+        @media (max-width: 600px) {
+            .tags { display: none; }
+            .u-card .card-body {
+                display: -webkit-box;
+                -webkit-line-clamp: 3;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
+            .mid-cta-strip { padding: 2.5rem 1.5rem; }
+            .collab-intro { margin-bottom: 2rem; }
         }
 
         /* ── PROOF STRIP ── */
@@ -1237,6 +1350,7 @@
 <div id="splash">
     <img class="splash-bg-img" src="rose-splash.jpg" alt="">
     <div class="splash-flare" id="splashFlare"></div>
+    <div class="splash-enter">TAP TO ENTER</div>
 </div>
 
 <div id="cursor-dot"></div>
@@ -1272,11 +1386,13 @@
 <div class="hero">
     <div class="video-bg">
         <iframe
-            src="https://www.youtube.com/embed/NnNWp4HNBnQ?autoplay=1&mute=1&loop=1&playlist=NnNWp4HNBnQ&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&playsinline=1&disablekb=1"
+            id="heroIframe"
+            src="https://www.youtube.com/embed/NnNWp4HNBnQ?autoplay=1&mute=1&loop=1&playlist=NnNWp4HNBnQ&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&playsinline=1&disablekb=1&enablejsapi=1"
             frameborder="0"
             allow="autoplay; fullscreen"
             allowfullscreen>
         </iframe>
+        <div class="video-shield"></div>
     </div>
     <div class="hero-overlay"></div>
     <div class="hero-vignette"></div>
@@ -1377,6 +1493,7 @@
     </div>
     <div class="cards-grid reveal">
         <div class="u-card kaatan">
+            <div class="card-mode">Night &middot; The Universe</div>
             <div class="card-name">KAATAN</div>
             <p class="card-meaning">Electronic &middot; Cinematic &middot; The Universe &middot; Global</p>
             <p class="card-body">132 BPM. Dubai Desert. Youngr. Global. KAATAN is the architecture &mdash; a cinematic electronic world with its own sonic identity, visual language, and mythology. This is the universe, fully realised and in motion.</p>
@@ -1390,6 +1507,7 @@
             </div>
         </div>
         <div class="u-card inga">
+            <div class="card-mode">Day &middot; The Stage</div>
             <div class="card-name">INGA</div>
             <p class="card-meaning">Tamil: "To be here" &middot; The Live Avatar &middot; On Stage</p>
             <p class="card-body">Folk, jazz, psychedelia. A voice that moves rooms. NEXA Music Season 2 winner. Tour-hardened, audience-connected, deeply rooted in the raw and the real. INGA is the heartbeat inside the KAATAN universe &mdash; alive on every stage.</p>
@@ -1483,59 +1601,17 @@
         <p class="label">Ground Floor</p>
         <h2 class="big-title collab-title">Build the<br>Universe</h2>
         <p>The pivot is already in motion. The question isn't whether this world gets built &mdash; it's who's in the room when it lands. Not hired hands. Architects.</p>
-        <p class="collab-priority">Priority seats: <strong>Artist Manager</strong> &nbsp;&middot;&nbsp; <strong>Booking Agent</strong> &nbsp;&middot;&nbsp; <strong>Sync Supervisor</strong></p>
     </div>
-    <div class="collab-groups">
-        <div class="c-group">
-            <div class="c-group-title">Make the Sound</div>
-            <ul class="c-roles">
-                <li>
-                    <span class="c-role-name">Collaborators</span>
-                    <span class="c-role-desc">Producers, composers, and artists who want to create inside a world, not just hand something in.</span>
-                </li>
-                <li>
-                    <span class="c-role-name">AV Partners</span>
-                    <span class="c-role-desc">Where sound and image become one continuous experience. Atmosphere over assets.</span>
-                </li>
-                <li>
-                    <span class="c-role-name">Sync &amp; Music Supervisors</span>
-                    <span class="c-role-desc">Film, TV, games, campaigns. KAATAN's sound has a world behind it &mdash; let's place it right.</span>
-                </li>
-            </ul>
+    <div class="collab-cards">
+        <div class="collab-card">
+            <p class="label">For Promoters &amp; Bookers</p>
+            <h3 class="collab-card-title">Book INGA<br>Live</h3>
+            <p class="collab-card-body">Festival programmers, promoters, venue curators, event producers. INGA on stage &mdash; intimate, electrifying, crowd-ready. NEXA Season 2 winner. India-toured. Dubai Desert-proven.</p>
         </div>
-        <div class="c-group">
-            <div class="c-group-title">Build the World</div>
-            <ul class="c-roles">
-                <li>
-                    <span class="c-role-name">Creative Directors</span>
-                    <span class="c-role-desc">Own the visual identity end-to-end. A world that holds together across every touchpoint.</span>
-                </li>
-                <li>
-                    <span class="c-role-name">Brand Partners</span>
-                    <span class="c-role-desc">Brands that want to align with a world being built &mdash; co-creation over placement.</span>
-                </li>
-                <li>
-                    <span class="c-role-name">Event IP Builders</span>
-                    <span class="c-role-desc">Original formats, immersive experiences, cultural moments. Build the live world with us.</span>
-                </li>
-            </ul>
-        </div>
-        <div class="c-group">
-            <div class="c-group-title">Run the Room</div>
-            <ul class="c-roles">
-                <li>
-                    <span class="c-role-name">Booking Agents</span>
-                    <span class="c-role-desc">Who can hold both: INGA on stage and the KAATAN world being built around her.</span>
-                </li>
-                <li>
-                    <span class="c-role-name">PR &amp; Press</span>
-                    <span class="c-role-desc">Tell the pivot story to the right music, culture, and lifestyle press. The narrative is ready.</span>
-                </li>
-                <li>
-                    <span class="c-role-name">Artist Manager</span>
-                    <span class="c-role-desc">The most strategic seat in the room. If you see what this is becoming &mdash; let's talk.</span>
-                </li>
-            </ul>
+        <div class="collab-card">
+            <p class="label">For Artists &amp; Creators</p>
+            <h3 class="collab-card-title">Create With<br>KAATAN</h3>
+            <p class="collab-card-body">Producers, AV artists, sync supervisors, brand partners. Build inside the universe &mdash; co-creation over placement. The world is in motion and the doors are open.</p>
         </div>
     </div>
     <a href="https://wa.me/919870998944" target="_blank" class="cta-btn" onclick="trackClick('whatsapp_cta')">Get in Touch &#8599;</a>
@@ -1727,19 +1803,30 @@
 
     // ── SPLASH SCREEN ──
     (function () {
-        const splash = document.getElementById('splash');
-        const flare  = document.getElementById('splashFlare');
+        const splash      = document.getElementById('splash');
+        const flare       = document.getElementById('splashFlare');
+        const heroIframe  = document.getElementById('heroIframe');
         if (!splash) return;
 
         document.body.style.overflow = 'hidden';
+        let entered = false;
 
-        setTimeout(function () {
-            // Gold flare bursts from centre outward
+        function enterSite() {
+            if (entered) return;
+            entered = true;
+
+            // Unmute the hero video (user gesture unlocks audio)
+            if (heroIframe) {
+                heroIframe.contentWindow.postMessage(
+                    JSON.stringify({ event: 'command', func: 'unMute', args: [] }), '*'
+                );
+            }
+
+            // Gold flare burst
             flare.style.transition = 'transform 0.75s cubic-bezier(0.2,0,0.3,1), opacity 0.75s ease';
             flare.style.transform  = 'translate(-50%,-50%) scale(1)';
             flare.style.opacity    = '1';
 
-            // After flare covers screen, dissolve splash to reveal site
             setTimeout(function () {
                 splash.classList.add('out');
                 setTimeout(function () {
@@ -1747,7 +1834,13 @@
                     document.body.style.overflow = '';
                 }, 700);
             }, 380);
-        }, 2300);
+        }
+
+        splash.addEventListener('click', enterSite);
+        splash.addEventListener('touchend', function (e) { e.preventDefault(); enterSite(); });
+
+        // Auto-dismiss fallback after 7 s (silent, no unmute)
+        setTimeout(enterSite, 7000);
     })();
 </script>
 </body>
