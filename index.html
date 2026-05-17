@@ -387,7 +387,7 @@
         }
 
         /* ── SHARED ── */
-        .container { max-width: 1360px; margin: 0 auto; padding: 8rem 3rem; }
+        .container { max-width: 1360px; margin: 0 auto; padding: 5rem 3rem; }
         .label {
             font-size: 0.62rem;
             letter-spacing: 0.42em;
@@ -645,8 +645,8 @@
         /* ── COLLABORATE ── */
         .collab-wrap {
             max-width: 1360px;
-            margin: 0 auto 8rem;
-            padding: 6rem 3rem;
+            margin: 0 auto 3rem;
+            padding: 4rem 3rem;
             border: 1px solid rgba(245,197,24,0.25);
             position: relative;
             overflow: hidden;
@@ -822,7 +822,7 @@
             .hamburger { display: flex; }
             .mobile-menu { display: flex; }
 
-            .container { padding: 5rem 1.5rem; }
+            .container { padding: 3.5rem 1.5rem; }
             .about-grid { grid-template-columns: 1fr; gap: 3rem; }
             .cards-grid { grid-template-columns: 1fr; }
             .u-card { border-right: none; border-bottom: 1px solid var(--border); padding: 3rem 2rem; }
@@ -855,7 +855,7 @@
             .hero-cta { padding: 0.9rem 2rem; font-size: 0.6rem; margin-top: 1.8rem; }
             .scroll-hint { display: none; }
 
-            .container { padding: 4rem 1.2rem; }
+            .container { padding: 3rem 1.2rem; }
             .label { font-size: 0.56rem; letter-spacing: 0.3em; }
             .big-title { font-size: clamp(2.5rem, 11vw, 4rem); }
 
@@ -1187,26 +1187,6 @@
             .collab-card-title { font-size: 2rem; }
         }
 
-        /* ── SPLASH: TAP TO ENTER ── */
-        #splash { cursor: pointer; }
-        .splash-enter {
-            position: absolute;
-            bottom: 10%;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 2;
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: clamp(0.85rem, 2.5vw, 1.1rem);
-            letter-spacing: 0.55em;
-            color: rgba(245,197,24,0.7);
-            white-space: nowrap;
-            animation: tapPulse 2.2s ease-in-out 1s infinite;
-            pointer-events: none;
-        }
-        @keyframes tapPulse {
-            0%, 100% { opacity: 0.25; }
-            50% { opacity: 1; }
-        }
 
         /* ── MOBILE LENGTH REDUCTION ── */
         @media (max-width: 600px) {
@@ -1249,7 +1229,7 @@
         /* ── MID-PAGE CTA ── */
         .mid-cta-strip {
             text-align: center;
-            padding: 4rem 3rem;
+            padding: 2.5rem 3rem;
             background: radial-gradient(ellipse at center, rgba(201,59,30,0.08) 0%, transparent 70%);
         }
         .mid-cta-hook {
@@ -1313,9 +1293,35 @@
             z-index: 10000;
             background: #000;
             overflow: hidden;
+            cursor: pointer;
             transition: opacity 0.65s ease;
         }
         #splash.out { opacity: 0; pointer-events: none; }
+
+        /* 3D flip scene */
+        .splash-scene {
+            position: absolute;
+            inset: 0;
+            perspective: 1400px;
+        }
+        .splash-flipper {
+            position: absolute;
+            inset: 0;
+            transform-style: preserve-3d;
+            transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .splash-flipper.flipped { transform: rotateY(180deg); }
+        .splash-face {
+            position: absolute;
+            inset: 0;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #000;
+        }
+        .splash-back { transform: rotateY(180deg); }
 
         .splash-bg-img {
             position: absolute;
@@ -1323,7 +1329,6 @@
             width: 100%; height: 100%;
             object-fit: contain;
             object-position: center;
-            z-index: 1;
             opacity: 0;
             animation: splashImgIn 1s ease 0.1s forwards;
         }
@@ -1331,6 +1336,38 @@
             0%   { opacity: 0; transform: scale(1.04); }
             100% { opacity: 1; transform: scale(1); }
         }
+
+        .splash-sigil-img {
+            width: min(72vmin, 500px);
+            height: min(72vmin, 500px);
+            object-fit: contain;
+            filter:
+                drop-shadow(0 0 50px rgba(201,59,30,0.55))
+                drop-shadow(0 0 120px rgba(201,59,30,0.2));
+        }
+
+        /* TAP TO ENTER — hidden until sigil reveals */
+        .splash-enter {
+            position: absolute;
+            bottom: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 5;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(0.85rem, 2.5vw, 1.1rem);
+            letter-spacing: 0.55em;
+            color: rgba(245,197,24,0.7);
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+        .splash-enter.shown { opacity: 1; animation: tapPulse 2.2s ease-in-out infinite; }
+        @keyframes tapPulse {
+            0%, 100% { opacity: 0.25; }
+            50% { opacity: 1; }
+        }
+
         .splash-flare {
             position: absolute;
             top: 50%; left: 50%;
@@ -1342,16 +1379,52 @@
             opacity: 0;
             pointer-events: none;
         }
+        /* ── AUDIO TOGGLE ── */
+        #audioToggle {
+            position: fixed;
+            bottom: 1.4rem;
+            right: 1.4rem;
+            z-index: 500;
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            border: 1px solid rgba(245,197,24,0.35);
+            background: rgba(12,8,8,0.8);
+            backdrop-filter: blur(8px);
+            color: var(--gold);
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: border-color 0.3s, background 0.3s;
+            opacity: 0;
+            animation: fadeUp 0.6s ease 0.3s forwards;
+        }
+        #audioToggle:hover { border-color: var(--gold); background: rgba(12,8,8,0.95); }
     </style>
 </head>
 <body>
 
 <!-- SPLASH SCREEN -->
 <div id="splash">
-    <img class="splash-bg-img" src="rose-splash.jpg" alt="">
+    <div class="splash-scene">
+        <div class="splash-flipper" id="splashFlipper">
+            <div class="splash-face splash-front">
+                <img class="splash-bg-img" src="rose-splash.jpg" alt="">
+            </div>
+            <div class="splash-face splash-back">
+                <img class="splash-sigil-img" src="kaatan-sigil.png" alt="">
+            </div>
+        </div>
+    </div>
     <div class="splash-flare" id="splashFlare"></div>
-    <div class="splash-enter">TAP TO ENTER</div>
+    <div class="splash-enter" id="splashEnter">TAP TO ENTER</div>
 </div>
+
+<!-- AUDIO TOGGLE -->
+<button id="audioToggle" aria-label="Toggle audio" style="display:none">
+    <span id="audioIcon">&#128264;</span>
+</button>
 
 <div id="cursor-dot"></div>
 <div id="cursor-ring"></div>
@@ -1405,8 +1478,8 @@
         <div class="hero-divider"><span>✦</span></div>
         <p class="hero-sub" id="heroSub">A Universe in Motion</p>
         <div class="hero-cta-group">
-            <a href="#universe" class="hero-cta" onclick="trackClick('hero_enter_world')">Enter the World</a>
-            <a href="#collaborate" class="hero-cta hero-cta-secondary" onclick="trackClick('hero_work_together')">Work With KAATAN &#8599;</a>
+            <a href="#collaborate" class="hero-cta" onclick="trackClick('hero_work_together')">Work With KAATAN &#8599;</a>
+            <a href="#universe" class="hero-cta hero-cta-secondary" onclick="trackClick('hero_enter_world')">Enter the World</a>
         </div>
     </div>
     <div class="scroll-hint">
@@ -1604,9 +1677,9 @@
     </div>
     <div class="collab-cards">
         <div class="collab-card">
-            <p class="label">For Promoters &amp; Bookers</p>
-            <h3 class="collab-card-title">Book INGA<br>Live</h3>
-            <p class="collab-card-body">Festival programmers, promoters, venue curators, event producers. INGA on stage &mdash; intimate, electrifying, crowd-ready. NEXA Season 2 winner. India-toured. Dubai Desert-proven.</p>
+            <p class="label">Live Bookings</p>
+            <h3 class="collab-card-title">Book a<br>Show</h3>
+            <p class="collab-card-body">Festival programmers, promoters, venue curators, event producers. Intimate, electrifying, crowd-ready. NEXA Season 2 winner. India-toured. Dubai Desert-proven.</p>
         </div>
         <div class="collab-card">
             <p class="label">For Artists &amp; Creators</p>
@@ -1803,26 +1876,34 @@
 
     // ── SPLASH SCREEN ──
     (function () {
-        const splash      = document.getElementById('splash');
-        const flare       = document.getElementById('splashFlare');
-        const heroIframe  = document.getElementById('heroIframe');
+        const splash     = document.getElementById('splash');
+        const flipper    = document.getElementById('splashFlipper');
+        const enterEl    = document.getElementById('splashEnter');
+        const flare      = document.getElementById('splashFlare');
+        const heroIframe = document.getElementById('heroIframe');
+        const audioBtn   = document.getElementById('audioToggle');
+        const audioIcon  = document.getElementById('audioIcon');
         if (!splash) return;
 
         document.body.style.overflow = 'hidden';
         let entered = false;
+        let muted = true;
+
+        function sendCmd(fn) {
+            if (heroIframe) heroIframe.contentWindow.postMessage(
+                JSON.stringify({ event: 'command', func: fn, args: [] }), '*'
+            );
+        }
 
         function enterSite() {
             if (entered) return;
             entered = true;
 
-            // Unmute the hero video (user gesture unlocks audio)
-            if (heroIframe) {
-                heroIframe.contentWindow.postMessage(
-                    JSON.stringify({ event: 'command', func: 'unMute', args: [] }), '*'
-                );
-            }
+            // Unmute on tap (user gesture unlocks audio)
+            sendCmd('unMute');
+            muted = false;
+            if (audioIcon) audioIcon.textContent = '🔊';
 
-            // Gold flare burst
             flare.style.transition = 'transform 0.75s cubic-bezier(0.2,0,0.3,1), opacity 0.75s ease';
             flare.style.transform  = 'translate(-50%,-50%) scale(1)';
             flare.style.opacity    = '1';
@@ -1832,16 +1913,69 @@
                 setTimeout(function () {
                     splash.style.display = 'none';
                     document.body.style.overflow = '';
+                    if (audioBtn) audioBtn.style.display = 'flex';
                 }, 700);
             }, 380);
         }
 
+        // Phase 1: rose shows for 2.6s, then card flips to sigil
+        setTimeout(function () {
+            if (flipper) flipper.classList.add('flipped');
+            // Show TAP TO ENTER after flip completes (1s)
+            setTimeout(function () {
+                if (enterEl) enterEl.classList.add('shown');
+            }, 1050);
+        }, 2600);
+
         splash.addEventListener('click', enterSite);
         splash.addEventListener('touchend', function (e) { e.preventDefault(); enterSite(); });
 
-        // Auto-dismiss fallback after 7 s (silent, no unmute)
-        setTimeout(enterSite, 7000);
+        // Auto-dismiss after 10s if no tap (muted, no audio unlock)
+        setTimeout(function () {
+            if (!entered) {
+                entered = true;
+                flare.style.transition = 'transform 0.75s cubic-bezier(0.2,0,0.3,1), opacity 0.75s ease';
+                flare.style.transform  = 'translate(-50%,-50%) scale(1)';
+                flare.style.opacity    = '1';
+                setTimeout(function () {
+                    splash.classList.add('out');
+                    setTimeout(function () {
+                        splash.style.display = 'none';
+                        document.body.style.overflow = '';
+                        if (audioBtn) audioBtn.style.display = 'flex';
+                    }, 700);
+                }, 380);
+            }
+        }, 10000);
+
+        // ── AUDIO TOGGLE BUTTON ──
+        if (audioBtn) {
+            audioBtn.addEventListener('click', function () {
+                muted = !muted;
+                sendCmd(muted ? 'mute' : 'unMute');
+                audioIcon.textContent = muted ? '🔇' : '🔊';
+            });
+        }
     })();
+
+    // ── YOUTUBE: loop on end + block end-screen state ──
+    window.addEventListener('message', function (e) {
+        try {
+            var data = JSON.parse(e.data);
+            // state 0 = ended → seek back to start and play
+            if (data.event === 'infoDelivery' && data.info && data.info.playerState === 0) {
+                var iframe = document.getElementById('heroIframe');
+                if (iframe) {
+                    iframe.contentWindow.postMessage(
+                        JSON.stringify({ event: 'command', func: 'seekTo', args: [0, true] }), '*'
+                    );
+                    iframe.contentWindow.postMessage(
+                        JSON.stringify({ event: 'command', func: 'playVideo', args: [] }), '*'
+                    );
+                }
+            }
+        } catch (err) {}
+    });
 </script>
 </body>
 </html>
