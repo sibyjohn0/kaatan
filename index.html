@@ -269,9 +269,23 @@
                 2px 2px 0 rgba(140,60,0,0.4),
                 3px 4px 14px rgba(0,0,0,0.6);
         }
+        /* Tamil / Hindi state — solid bright colour, no gradient clip */
+        .glitch.lang-script {
+            background: none;
+            -webkit-text-fill-color: #F7C520;
+            animation: none;
+            filter: drop-shadow(0 0 28px rgba(247,197,32,0.55)) drop-shadow(2px 4px 0 rgba(120,50,0,0.7));
+            text-shadow: none;
+        }
+        .glitch.lang-script::before { -webkit-text-fill-color: #F7C520; color: #F7C520; }
+        .glitch.lang-script::after  { -webkit-text-fill-color: var(--pink); color: var(--pink); }
+
         /* glitch transition — runs alongside kaatanFlow */
         .glitch.switching {
             animation: kaatanFlow 7s linear 1.5s infinite, glitchSwitch 0.55s ease-out forwards;
+        }
+        .glitch.switching.lang-script {
+            animation: glitchSwitch 0.55s ease-out forwards;
         }
         @keyframes glitchSwitch {
             0%   { transform: translate(0)          skewX(0);    opacity: 1;   }
@@ -1105,39 +1119,29 @@
             position: fixed;
             inset: 0;
             z-index: 10000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--bg);
+            background: #000;
             overflow: hidden;
             transition: opacity 0.65s ease;
         }
         #splash.out { opacity: 0; pointer-events: none; }
 
-        .splash-glow {
+        .splash-bg-img {
             position: absolute;
-            width: clamp(260px, 55vmin, 460px);
-            height: clamp(260px, 55vmin, 460px);
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(212,146,14,0.5) 0%, rgba(201,59,30,0.18) 50%, transparent 72%);
-            animation: splashGlow 1.8s ease-in-out 0.8s infinite;
+            inset: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+            object-position: center;
             z-index: 1;
-            pointer-events: none;
-        }
-        .splash-img {
-            width: clamp(200px, 42vmin, 360px);
-            height: clamp(200px, 42vmin, 360px);
-            border-radius: 50%;
-            position: relative;
-            z-index: 2;
             opacity: 0;
-            transform: scale(0.55);
-            animation: splashMedallionIn 0.75s cubic-bezier(0.34,1.56,0.64,1) 0.25s forwards;
+            animation: splashImgIn 1s ease 0.1s forwards;
+        }
+        @keyframes splashImgIn {
+            0%   { opacity: 0; transform: scale(1.04); }
+            100% { opacity: 1; transform: scale(1); }
         }
         .splash-flare {
             position: absolute;
             top: 50%; left: 50%;
-            /* large circle centred on viewport */
             width: 140vmax; height: 140vmax;
             transform: translate(-50%, -50%) scale(0);
             border-radius: 50%;
@@ -1146,24 +1150,14 @@
             opacity: 0;
             pointer-events: none;
         }
-
-        @keyframes splashMedallionIn {
-            0%   { opacity: 0; transform: scale(0.55); }
-            100% { opacity: 1; transform: scale(1); }
-        }
-        @keyframes splashGlow {
-            0%, 100% { transform: scale(0.88); opacity: 0.45; }
-            50%       { transform: scale(1.3);  opacity: 1; }
-        }
     </style>
 </head>
 <body>
 
 <!-- SPLASH SCREEN -->
 <div id="splash">
-    <div class="splash-glow"></div>
+    <img class="splash-bg-img" src="rose-splash.jpg" alt="">
     <div class="splash-flare" id="splashFlare"></div>
-    <img class="splash-img" src="rose-medallion.png" alt="">
 </div>
 
 <div id="cursor-dot"></div>
@@ -1592,9 +1586,9 @@
     // ── KAATAN TITLE LANGUAGE CYCLE (glitch transition) ──
     (function () {
         const LANGS = [
-            { text: 'KAATAN',  font: "'Bebas Neue', sans-serif",            size: '',                        spacing: '0.05em', hold: 4200 },
-            { text: 'காட்டன்', font: "'Noto Sans Tamil', sans-serif",       size: 'clamp(3.2rem,11vw,10rem)', spacing: '0.02em', hold: 3400 },
-            { text: 'काटान',   font: "'Noto Sans Devanagari', sans-serif",   size: 'clamp(4rem,13.5vw,13rem)', spacing: '0.03em', hold: 3400 },
+            { text: 'KAATAN',  font: "'Bebas Neue', sans-serif",            size: '',                         spacing: '0.05em', script: false, hold: 4200 },
+            { text: 'காட்டன்', font: "'Noto Sans Tamil', sans-serif",       size: 'clamp(3.2rem,11vw,10rem)', spacing: '0.02em', script: true,  hold: 3400 },
+            { text: 'काटान',   font: "'Noto Sans Devanagari', sans-serif",   size: 'clamp(4rem,13.5vw,13rem)', spacing: '0.03em', script: true,  hold: 3400 },
         ];
         let idx = 0;
 
@@ -1604,15 +1598,21 @@
 
             el.classList.add('switching');
 
-            // swap text at opacity-0 midpoint (40% of 550ms)
+            // swap text at opacity-0 midpoint
             setTimeout(function () {
                 idx = (idx + 1) % LANGS.length;
                 const lang = LANGS[idx];
-                el.textContent        = lang.text;
+                el.textContent         = lang.text;
                 el.setAttribute('data-text', lang.text);
-                el.style.fontFamily   = lang.font;
-                el.style.fontSize     = lang.size;
+                el.style.fontFamily    = lang.font;
+                el.style.fontSize      = lang.size;
                 el.style.letterSpacing = lang.spacing;
+                // bright solid colour for script languages, gradient for English
+                if (lang.script) {
+                    el.classList.add('lang-script');
+                } else {
+                    el.classList.remove('lang-script');
+                }
             }, 220);
 
             setTimeout(function () {
