@@ -792,9 +792,66 @@
                 nav { padding-top: calc(0.9rem + env(safe-area-inset-top)); }
             }
         }
+
+        /* ── CUSTOM CURSOR ── */
+        #cursor-dot, #cursor-ring {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        #cursor-dot {
+            width: 5px; height: 5px;
+            background: var(--gold);
+            z-index: 99999;
+        }
+        #cursor-ring {
+            width: 28px; height: 28px;
+            border: 1px solid rgba(245,197,24,0.55);
+            z-index: 99998;
+            transition: width 0.3s ease, height 0.3s ease, border-color 0.3s ease;
+        }
+        #cursor-ring.grow { width: 52px; height: 52px; border-color: var(--gold); }
+        @media (hover: hover) and (pointer: fine) {
+            html, html a, html button { cursor: none; }
+            #cursor-dot, #cursor-ring { display: block; }
+        }
+
+        /* ── LETTER SPLIT ── */
+        .split-letter {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(28px);
+            transition: opacity 0.45s ease, transform 0.45s ease;
+        }
+        .split-letter.in { opacity: 1; transform: translateY(0); }
+
+        /* ── SECTION DIVIDERS ── */
+        .section-divider {
+            width: 100%;
+            height: 50px;
+            position: relative;
+            pointer-events: none;
+        }
+        .div-lines {
+            display: block;
+            width: 100%; height: 100%;
+            position: absolute;
+            top: 0; left: 0;
+        }
+        .div-ornament {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 28px; height: 28px;
+        }
     </style>
 </head>
 <body>
+
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
 
 <!-- MOBILE MENU -->
 <div class="mobile-menu" id="mobileMenu">
@@ -840,13 +897,26 @@
             <span class="glitch" data-text="KAATAN">KAATAN</span>
         </h1>
         <div class="hero-divider"><span>✦</span></div>
-        <p class="hero-sub">A Universe in Motion</p>
+        <p class="hero-sub" id="heroSub">A Universe in Motion</p>
         <a href="#universe" class="hero-cta" onclick="trackClick('hero_enter_world')">Enter the World</a>
     </div>
     <div class="scroll-hint">
         <span>Scroll</span>
         <div class="scroll-line"></div>
     </div>
+</div>
+
+<div class="section-divider" aria-hidden="true">
+    <svg class="div-lines" viewBox="0 0 1200 50" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="0" y1="38" x2="560" y2="25" stroke="rgba(245,197,24,0.15)" stroke-width="0.8"/>
+        <circle cx="572" cy="25" r="1.8" fill="rgba(245,197,24,0.25)"/>
+        <circle cx="628" cy="25" r="1.8" fill="rgba(245,197,24,0.25)"/>
+        <line x1="640" y1="25" x2="1200" y2="12" stroke="rgba(245,197,24,0.15)" stroke-width="0.8"/>
+    </svg>
+    <svg class="div-ornament" viewBox="-16 -16 32 32" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="0,-11 11,0 0,11 -11,0" fill="none" stroke="rgba(245,197,24,0.45)" stroke-width="1"/>
+        <polygon points="0,-5 5,0 0,5 -5,0" fill="rgba(245,197,24,0.15)" stroke="none"/>
+    </svg>
 </div>
 
 <!-- ABOUT -->
@@ -886,11 +956,24 @@
     </div>
 </div>
 
+<div class="section-divider" aria-hidden="true">
+    <svg class="div-lines" viewBox="0 0 1200 50" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="0" y1="12" x2="560" y2="25" stroke="rgba(245,197,24,0.15)" stroke-width="0.8"/>
+        <circle cx="572" cy="25" r="1.8" fill="rgba(245,197,24,0.25)"/>
+        <circle cx="628" cy="25" r="1.8" fill="rgba(245,197,24,0.25)"/>
+        <line x1="640" y1="25" x2="1200" y2="38" stroke="rgba(245,197,24,0.15)" stroke-width="0.8"/>
+    </svg>
+    <svg class="div-ornament" viewBox="-16 -16 32 32" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="0,-11 11,0 0,11 -11,0" fill="none" stroke="rgba(245,197,24,0.45)" stroke-width="1"/>
+        <polygon points="0,-5 5,0 0,5 -5,0" fill="rgba(245,197,24,0.15)" stroke="none"/>
+    </svg>
+</div>
+
 <!-- UNIVERSE -->
 <div class="container universe-wrap" id="universe">
     <div class="universe-header">
         <p class="label">Two Faces. One World.</p>
-        <h2 class="big-title reveal">The Universe</h2>
+        <h2 class="big-title" data-letters>The Universe</h2>
     </div>
     <div class="cards-grid reveal">
         <div class="u-card kaatan">
@@ -922,10 +1005,23 @@
     </div>
 </div>
 
+<div class="section-divider" aria-hidden="true">
+    <svg class="div-lines" viewBox="0 0 1200 50" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="0" y1="38" x2="560" y2="25" stroke="rgba(245,197,24,0.15)" stroke-width="0.8"/>
+        <circle cx="572" cy="25" r="1.8" fill="rgba(245,197,24,0.25)"/>
+        <circle cx="628" cy="25" r="1.8" fill="rgba(245,197,24,0.25)"/>
+        <line x1="640" y1="25" x2="1200" y2="12" stroke="rgba(245,197,24,0.15)" stroke-width="0.8"/>
+    </svg>
+    <svg class="div-ornament" viewBox="-16 -16 32 32" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="0,-11 11,0 0,11 -11,0" fill="none" stroke="rgba(245,197,24,0.45)" stroke-width="1"/>
+        <polygon points="0,-5 5,0 0,5 -5,0" fill="rgba(245,197,24,0.15)" stroke="none"/>
+    </svg>
+</div>
+
 <!-- MUSIC -->
 <div class="container music-wrap" id="music">
     <p class="label">Watch &amp; Listen</p>
-    <h2 class="big-title reveal">The Music</h2>
+    <h2 class="big-title" data-letters>The Music</h2>
     <div class="ornament reveal">Young Hearts &times; Youngr</div>
 
     <!-- Playable YouTube video -->
@@ -957,6 +1053,19 @@
         <a href="https://music.apple.com/us/artist/kaatan/1838439968" target="_blank" class="p-link" onclick="trackClick('apple_music')">&#8599;&nbsp; Apple Music</a>
         <a href="https://www.beatport.com/artist/kaatan/1393932" target="_blank" class="p-link" onclick="trackClick('beatport')">&#8599;&nbsp; Beatport</a>
     </div>
+</div>
+
+<div class="section-divider" aria-hidden="true">
+    <svg class="div-lines" viewBox="0 0 1200 50" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="0" y1="12" x2="560" y2="25" stroke="rgba(245,197,24,0.15)" stroke-width="0.8"/>
+        <circle cx="572" cy="25" r="1.8" fill="rgba(245,197,24,0.25)"/>
+        <circle cx="628" cy="25" r="1.8" fill="rgba(245,197,24,0.25)"/>
+        <line x1="640" y1="25" x2="1200" y2="38" stroke="rgba(245,197,24,0.15)" stroke-width="0.8"/>
+    </svg>
+    <svg class="div-ornament" viewBox="-16 -16 32 32" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="0,-11 11,0 0,11 -11,0" fill="none" stroke="rgba(245,197,24,0.45)" stroke-width="1"/>
+        <polygon points="0,-5 5,0 0,5 -5,0" fill="rgba(245,197,24,0.15)" stroke="none"/>
+    </svg>
 </div>
 
 <!-- COLLABORATE -->
@@ -1044,32 +1153,104 @@
     // Mobile menu
     const hamburger = document.getElementById('hamburger');
     const mobileMenu = document.getElementById('mobileMenu');
-
     function openMenu() {
-        hamburger.classList.add('open');
-        mobileMenu.classList.add('open');
-        hamburger.setAttribute('aria-expanded', 'true');
-        document.body.style.overflow = 'hidden';
+        hamburger.classList.add('open'); mobileMenu.classList.add('open');
+        hamburger.setAttribute('aria-expanded', 'true'); document.body.style.overflow = 'hidden';
     }
     function closeMenu() {
-        hamburger.classList.remove('open');
-        mobileMenu.classList.remove('open');
-        hamburger.setAttribute('aria-expanded', 'false');
-        document.body.style.overflow = '';
+        hamburger.classList.remove('open'); mobileMenu.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', 'false'); document.body.style.overflow = '';
     }
-    hamburger.addEventListener('click', () => {
-        hamburger.classList.contains('open') ? closeMenu() : openMenu();
-    });
+    hamburger.addEventListener('click', () => hamburger.classList.contains('open') ? closeMenu() : openMenu());
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
 
-    // Scroll reveal
-    const reveals = document.querySelectorAll('.reveal');
+    // ── CUSTOM CURSOR ──
+    if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+        const dot  = document.getElementById('cursor-dot');
+        const ring = document.getElementById('cursor-ring');
+        let mx = -100, my = -100, rx = -100, ry = -100;
+
+        document.addEventListener('mousemove', e => {
+            mx = e.clientX; my = e.clientY;
+            dot.style.transform = `translate(${mx - 2.5}px, ${my - 2.5}px)`;
+        });
+
+        document.querySelectorAll('a, button, .u-card, .c-group').forEach(el => {
+            el.addEventListener('mouseenter', () => ring.classList.add('grow'));
+            el.addEventListener('mouseleave', () => ring.classList.remove('grow'));
+        });
+
+        (function lerpRing() {
+            rx += (mx - rx) * 0.1;
+            ry += (my - ry) * 0.1;
+            ring.style.transform = `translate(${rx - 14}px, ${ry - 14}px)`;
+            requestAnimationFrame(lerpRing);
+        })();
+    }
+
+    // ── LETTER SPLIT ──
+    function splitIntoLetters(el) {
+        if (el.dataset.split) return;
+        el.dataset.split = '1';
+        const walk = node => {
+            if (node.nodeType === 3) {
+                const frag = document.createDocumentFragment();
+                for (const ch of node.textContent) {
+                    const sp = document.createElement('span');
+                    if (ch === ' ') {
+                        sp.style.cssText = 'display:inline-block;width:0.28em;';
+                        sp.textContent = ' ';
+                    } else {
+                        sp.className = 'split-letter';
+                        sp.textContent = ch;
+                    }
+                    frag.appendChild(sp);
+                }
+                node.parentNode.replaceChild(frag, node);
+            } else if (node.nodeType === 1 && node.tagName !== 'BR') {
+                [...node.childNodes].forEach(walk);
+            }
+        };
+        [...el.childNodes].forEach(walk);
+    }
+
+    function revealLetters(el) {
+        el.querySelectorAll('.split-letter').forEach((ltr, i) => {
+            setTimeout(() => ltr.classList.add('in'), i * 38);
+        });
+    }
+
+    document.querySelectorAll('[data-letters]').forEach(splitIntoLetters);
+
+    // ── SCROLL REVEAL ──
     const io = new IntersectionObserver((entries) => {
         entries.forEach(e => {
-            if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+            if (e.isIntersecting) {
+                if (e.target.dataset.letters !== undefined) {
+                    revealLetters(e.target);
+                } else {
+                    e.target.classList.add('visible');
+                }
+                io.unobserve(e.target);
+            }
         });
-    }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
-    reveals.forEach(el => io.observe(el));
+    }, { threshold: 0.1, rootMargin: '0px 0px -20px 0px' });
+
+    document.querySelectorAll('.reveal, [data-letters]').forEach(el => io.observe(el));
+
+    // ── TYPEWRITER (hero subtitle) ──
+    const heroSub = document.getElementById('heroSub');
+    if (heroSub) {
+        const txt = heroSub.textContent;
+        heroSub.textContent = '';
+        setTimeout(() => {
+            let i = 0;
+            const type = () => {
+                if (i < txt.length) { heroSub.textContent += txt[i++]; setTimeout(type, 55); }
+            };
+            type();
+        }, 1400);
+    }
 </script>
 </body>
 </html>
