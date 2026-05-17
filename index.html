@@ -1108,6 +1108,91 @@
             flex-shrink: 0;
         }
 
+        /* ── PROOF STRIP ── */
+        .proof-strip {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.6rem 1.2rem;
+            padding: 1.4rem 3rem;
+            background: rgba(28,16,56,0.45);
+            border-top: 1px solid rgba(245,197,24,0.12);
+            border-bottom: 1px solid rgba(245,197,24,0.12);
+        }
+        .proof-strip span {
+            font-size: 0.6rem;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: rgba(245,230,200,0.6);
+        }
+        .proof-dot { color: rgba(245,197,24,0.4) !important; letter-spacing: 0 !important; }
+        @media (max-width: 600px) {
+            .proof-strip { padding: 1.2rem; gap: 0.4rem 0.8rem; }
+            .proof-strip span { font-size: 0.52rem; letter-spacing: 0.18em; }
+            .proof-dot { display: none; }
+        }
+
+        /* ── MID-PAGE CTA ── */
+        .mid-cta-strip {
+            text-align: center;
+            padding: 4rem 3rem;
+            background: radial-gradient(ellipse at center, rgba(201,59,30,0.08) 0%, transparent 70%);
+        }
+        .mid-cta-hook {
+            font-size: 0.68rem;
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            color: var(--dim);
+            margin-bottom: 1.4rem;
+        }
+        @media (max-width: 600px) {
+            .mid-cta-strip { padding: 3rem 1.5rem; }
+        }
+
+        /* ── COLLAB PRIORITY ── */
+        .collab-priority {
+            font-size: 0.65rem;
+            letter-spacing: 0.2em;
+            color: rgba(245,197,24,0.7);
+            text-transform: uppercase;
+            margin-top: 1.2rem;
+            padding-top: 1.2rem;
+            border-top: 1px solid rgba(245,197,24,0.15);
+        }
+        .collab-priority strong { color: var(--gold); font-weight: 700; }
+
+        /* ── CTA NOTE ── */
+        .cta-note {
+            font-size: 0.58rem;
+            letter-spacing: 0.18em;
+            color: rgba(245,230,200,0.35);
+            text-transform: uppercase;
+            margin-top: 1.2rem;
+        }
+
+        /* ── HERO CTA GROUP ── */
+        .hero-cta-group {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 2.5rem;
+            opacity: 0;
+            animation: fadeUp 1s ease 1.6s forwards;
+        }
+        .hero-cta-group .hero-cta { margin-top: 0; opacity: 1; animation: none; }
+        .hero-cta-secondary {
+            background: rgba(245,197,24,0.08);
+            border-color: rgba(245,197,24,0.4);
+        }
+        .hero-cta-secondary:hover { background: var(--gold); color: var(--bg); }
+        @media (max-width: 600px) {
+            .hero-cta-group { flex-direction: column; gap: 0.7rem; }
+            .hero-cta-group .hero-cta { width: 100%; justify-content: center; }
+        }
+
         /* ── SPLASH SCREEN ── */
         #splash {
             position: fixed;
@@ -1203,7 +1288,10 @@
         </h1>
         <div class="hero-divider"><span>✦</span></div>
         <p class="hero-sub" id="heroSub">A Universe in Motion</p>
-        <a href="#universe" class="hero-cta" onclick="trackClick('hero_enter_world')">Enter the World</a>
+        <div class="hero-cta-group">
+            <a href="#universe" class="hero-cta" onclick="trackClick('hero_enter_world')">Enter the World</a>
+            <a href="#collaborate" class="hero-cta hero-cta-secondary" onclick="trackClick('hero_work_together')">Work With KAATAN &#8599;</a>
+        </div>
     </div>
     <div class="scroll-hint">
         <span>The Story</span>
@@ -1257,7 +1345,7 @@
                 <p>KAATAN is the universe being built &mdash; electronic, cinematic, a world with its own sonic architecture, visual language, and mythology. Already moving globally: a collaboration with UK producer Youngr, a live set in the Dubai Desert, music on shelves worldwide.</p>
                 <p>INGA is the live avatar. Intimate rooms, real audiences, folk-jazz-psychedelia that moves people from Goa to Delhi &mdash; a NEXA Music Season 2 winner who makes audiences sing back lyrics to songs they only just heard. She doesn't go away. She plays.</p>
                 <p>Two names. One universe. KAATAN is the architecture. INGA is the heartbeat inside it.</p>
-                <p>This isn't a debut asking for a leap of faith. This is an established, award-winning, touring artist building the next, larger world on top of a real foundation.</p>
+                <p>The foundation is already built. The next world is being assembled on top of it &mdash; and the ground floor is still open.</p>
             </div>
         </div>
     </div>
@@ -1269,6 +1357,16 @@
         <span class="div-gem"><span class="rose-medallion">✿</span></span>
         <span class="div-rule"></span>
     </div>
+</div>
+
+<div class="proof-strip" aria-label="Highlights">
+    <span>NEXA Music Season 2 Winner</span>
+    <span class="proof-dot">·</span>
+    <span>Youngr &times; KAATAN</span>
+    <span class="proof-dot">·</span>
+    <span>Dubai Desert Live</span>
+    <span class="proof-dot">·</span>
+    <span>Bangalore to Global</span>
 </div>
 
 <!-- UNIVERSE -->
@@ -1373,12 +1471,19 @@
     </div>
 </div>
 
+<!-- MID CTA -->
+<div class="mid-cta-strip reveal">
+    <p class="mid-cta-hook">Something clicking? Let's talk early.</p>
+    <a href="https://wa.me/919870998944" target="_blank" class="cta-btn" onclick="trackClick('mid_cta')">Start the Conversation &#8599;</a>
+</div>
+
 <!-- COLLABORATE -->
 <div class="collab-wrap reveal" id="collaborate">
     <div class="collab-intro">
         <p class="label">Ground Floor</p>
         <h2 class="big-title collab-title">Build the<br>Universe</h2>
         <p>The pivot is already in motion. The question isn't whether this world gets built &mdash; it's who's in the room when it lands. Not hired hands. Architects.</p>
+        <p class="collab-priority">Priority seats: <strong>Artist Manager</strong> &nbsp;&middot;&nbsp; <strong>Booking Agent</strong> &nbsp;&middot;&nbsp; <strong>Sync Supervisor</strong></p>
     </div>
     <div class="collab-groups">
         <div class="c-group">
@@ -1434,6 +1539,7 @@
         </div>
     </div>
     <a href="https://wa.me/919870998944" target="_blank" class="cta-btn" onclick="trackClick('whatsapp_cta')">Get in Touch &#8599;</a>
+    <p class="cta-note">Currently finalising the next release &mdash; taking bookings for late 2026.</p>
 </div>
 
 <!-- FOOTER -->
