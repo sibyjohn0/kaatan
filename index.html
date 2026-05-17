@@ -263,18 +263,16 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             animation: kaatanFlow 7s linear 1.5s infinite;
-            /* lighter emboss — warm amber shadow, not dark brown */
-            text-shadow:
-                1px 1px 0 rgba(180,90,0,0.5),
-                2px 2px 0 rgba(140,60,0,0.4),
-                3px 4px 14px rgba(0,0,0,0.6);
+            /* gold glow — no dark extrusion */
+            filter: drop-shadow(0 0 35px rgba(247,197,32,0.5));
+            text-shadow: none;
         }
         /* Tamil / Hindi state — solid bright colour, no gradient clip */
         .glitch.lang-script {
             background: none;
             -webkit-text-fill-color: #F7C520;
             animation: none;
-            filter: drop-shadow(0 0 28px rgba(247,197,32,0.55)) drop-shadow(2px 4px 0 rgba(120,50,0,0.7));
+            filter: drop-shadow(0 0 35px rgba(247,197,32,0.65));
             text-shadow: none;
         }
         .glitch.lang-script::before { -webkit-text-fill-color: #F7C520; color: #F7C520; }
@@ -431,7 +429,7 @@
             align-items: start;
         }
         .about-title {
-            background: linear-gradient(140deg, var(--indigo) 0%, var(--cream) 22%, var(--gold) 42%, var(--red) 65%, var(--pink) 85%, var(--indigo) 100%);
+            background: linear-gradient(140deg, #F7C520 0%, var(--cream) 28%, #FF9944 50%, var(--pink) 75%, #F7C520 100%);
             background-size: 220% 220%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -678,7 +676,7 @@
         }
         .collab-intro { max-width: 680px; margin-bottom: 4rem; }
         .collab-title {
-            background: linear-gradient(140deg, var(--indigo) 0%, var(--gold) 28%, var(--cream) 50%, var(--red) 72%, var(--indigo) 100%);
+            background: linear-gradient(140deg, #F7C520 0%, var(--cream) 30%, #FF9944 55%, var(--pink) 80%, #F7C520 100%);
             background-size: 220% 220%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -1008,12 +1006,7 @@
         [data-letters] {
             position: relative;
             overflow: hidden;
-            text-shadow:
-                1px 1px 0 #6B3208,
-                2px 2px 0 #5A2806,
-                3px 3px 0 #4A2004,
-                4px 4px 0 #3A1802,
-                5px 6px 18px rgba(0,0,0,0.55);
+            filter: drop-shadow(0 0 18px rgba(247,197,32,0.35));
         }
         [data-letters]::after {
             content: '';
@@ -1028,14 +1021,13 @@
 
         [data-letters].gradient-active {
             background: linear-gradient(90deg,
-                var(--indigo) 0%,
-                var(--gold)   12%,
-                var(--red)    28%,
-                var(--cream)  45%,
-                var(--pink)   60%,
-                var(--red)    75%,
-                var(--gold)   88%,
-                var(--indigo) 100%
+                #F7C520  0%,
+                #FFFFFF  18%,
+                #FF9944  34%,
+                #F7C520  50%,
+                #FFFFFF  66%,
+                #FF8C69  82%,
+                #F7C520  100%
             );
             background-size: 300% 100%;
             -webkit-background-clip: text;
