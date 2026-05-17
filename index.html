@@ -1293,35 +1293,16 @@
             z-index: 10000;
             background: #000;
             overflow: hidden;
-            cursor: pointer;
             transition: opacity 0.65s ease;
         }
         #splash.out { opacity: 0; pointer-events: none; }
 
-        /* 3D flip scene */
-        .splash-scene {
+        .splash-rose {
             position: absolute;
             inset: 0;
-            perspective: 1400px;
+            transition: opacity 0.9s ease;
         }
-        .splash-flipper {
-            position: absolute;
-            inset: 0;
-            transform-style: preserve-3d;
-            transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .splash-flipper.flipped { transform: rotateY(180deg); }
-        .splash-face {
-            position: absolute;
-            inset: 0;
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #000;
-        }
-        .splash-back { transform: rotateY(180deg); }
+        .splash-rose.out { opacity: 0; }
 
         .splash-bg-img {
             position: absolute;
@@ -1330,42 +1311,29 @@
             object-fit: contain;
             object-position: center;
             opacity: 0;
-            animation: splashImgIn 1s ease 0.1s forwards;
+            animation: splashImgIn 0.9s ease 0.1s forwards;
         }
         @keyframes splashImgIn {
-            0%   { opacity: 0; transform: scale(1.04); }
-            100% { opacity: 1; transform: scale(1); }
+            from { opacity: 0; transform: scale(1.03); }
+            to   { opacity: 1; transform: scale(1); }
         }
+
+        .splash-sigil-wrap {
+            position: absolute;
+            inset: 0;
+            background: #000;
+            opacity: 0;
+            transition: opacity 0.9s ease;
+        }
+        .splash-sigil-wrap.in { opacity: 1; }
 
         .splash-sigil-img {
-            width: min(72vmin, 500px);
-            height: min(72vmin, 500px);
-            object-fit: contain;
-            filter:
-                drop-shadow(0 0 50px rgba(201,59,30,0.55))
-                drop-shadow(0 0 120px rgba(201,59,30,0.2));
-        }
-
-        /* TAP TO ENTER — hidden until sigil reveals */
-        .splash-enter {
             position: absolute;
-            bottom: 10%;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 5;
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: clamp(0.85rem, 2.5vw, 1.1rem);
-            letter-spacing: 0.55em;
-            color: rgba(245,197,24,0.7);
-            white-space: nowrap;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.5s ease;
-        }
-        .splash-enter.shown { opacity: 1; animation: tapPulse 2.2s ease-in-out infinite; }
-        @keyframes tapPulse {
-            0%, 100% { opacity: 0.25; }
-            50% { opacity: 1; }
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: center;
         }
 
         .splash-flare {
@@ -1407,18 +1375,13 @@
 
 <!-- SPLASH SCREEN -->
 <div id="splash">
-    <div class="splash-scene">
-        <div class="splash-flipper" id="splashFlipper">
-            <div class="splash-face splash-front">
-                <img class="splash-bg-img" src="rose-splash.jpg" alt="">
-            </div>
-            <div class="splash-face splash-back">
-                <img class="splash-sigil-img" src="kaatan-sigil.png" alt="">
-            </div>
-        </div>
+    <div class="splash-rose" id="splashRose">
+        <img class="splash-bg-img" src="rose-splash.jpg" alt="">
+    </div>
+    <div class="splash-sigil-wrap" id="splashSigil">
+        <img class="splash-sigil-img" src="kaatan-sigil.png" alt="">
     </div>
     <div class="splash-flare" id="splashFlare"></div>
-    <div class="splash-enter" id="splashEnter">TAP TO ENTER</div>
 </div>
 
 <!-- AUDIO TOGGLE -->
@@ -1477,10 +1440,7 @@
         </h1>
         <div class="hero-divider"><span>✦</span></div>
         <p class="hero-sub" id="heroSub">A Universe in Motion</p>
-        <div class="hero-cta-group">
-            <a href="#collaborate" class="hero-cta" onclick="trackClick('hero_work_together')">Work With KAATAN &#8599;</a>
-            <a href="#universe" class="hero-cta hero-cta-secondary" onclick="trackClick('hero_enter_world')">Enter the World</a>
-        </div>
+        <a href="#collaborate" class="hero-cta" style="margin-top:2.5rem;opacity:0;animation:fadeUp 1s ease 1.6s forwards" onclick="trackClick('hero_work_together')">Work With KAATAN &#8599;</a>
     </div>
     <div class="scroll-hint">
         <span>The Story</span>
@@ -1877,8 +1837,8 @@
     // ── SPLASH SCREEN ──
     (function () {
         const splash     = document.getElementById('splash');
-        const flipper    = document.getElementById('splashFlipper');
-        const enterEl    = document.getElementById('splashEnter');
+        const rose       = document.getElementById('splashRose');
+        const sigil      = document.getElementById('splashSigil');
         const flare      = document.getElementById('splashFlare');
         const heroIframe = document.getElementById('heroIframe');
         const audioBtn   = document.getElementById('audioToggle');
@@ -1886,28 +1846,18 @@
         if (!splash) return;
 
         document.body.style.overflow = 'hidden';
-        let entered = false;
         let muted = true;
 
-        function sendCmd(fn) {
+        function sendCmd(fn, args) {
             if (heroIframe) heroIframe.contentWindow.postMessage(
-                JSON.stringify({ event: 'command', func: fn, args: [] }), '*'
+                JSON.stringify({ event: 'command', func: fn, args: args || [] }), '*'
             );
         }
 
-        function enterSite() {
-            if (entered) return;
-            entered = true;
-
-            // Unmute on tap (user gesture unlocks audio)
-            sendCmd('unMute');
-            muted = false;
-            if (audioIcon) audioIcon.textContent = '🔊';
-
+        function openSite() {
             flare.style.transition = 'transform 0.75s cubic-bezier(0.2,0,0.3,1), opacity 0.75s ease';
             flare.style.transform  = 'translate(-50%,-50%) scale(1)';
             flare.style.opacity    = '1';
-
             setTimeout(function () {
                 splash.classList.add('out');
                 setTimeout(function () {
@@ -1915,45 +1865,24 @@
                     document.body.style.overflow = '';
                     if (audioBtn) audioBtn.style.display = 'flex';
                 }, 700);
-            }, 380);
+            }, 400);
         }
 
-        // Phase 1: rose shows for 2.6s, then card flips to sigil
+        // Phase 1 — Rose: 2.5s
+        // Phase 2 — Cross-fade to sigil: 2.5s dwell
+        // Phase 3 — Gold flare → site
         setTimeout(function () {
-            if (flipper) flipper.classList.add('flipped');
-            // Show TAP TO ENTER after flip completes (1s)
-            setTimeout(function () {
-                if (enterEl) enterEl.classList.add('shown');
-            }, 1050);
-        }, 2600);
+            rose.classList.add('out');
+            sigil.classList.add('in');
+            setTimeout(openSite, 2500);
+        }, 2500);
 
-        splash.addEventListener('click', enterSite);
-        splash.addEventListener('touchend', function (e) { e.preventDefault(); enterSite(); });
-
-        // Auto-dismiss after 10s if no tap (muted, no audio unlock)
-        setTimeout(function () {
-            if (!entered) {
-                entered = true;
-                flare.style.transition = 'transform 0.75s cubic-bezier(0.2,0,0.3,1), opacity 0.75s ease';
-                flare.style.transform  = 'translate(-50%,-50%) scale(1)';
-                flare.style.opacity    = '1';
-                setTimeout(function () {
-                    splash.classList.add('out');
-                    setTimeout(function () {
-                        splash.style.display = 'none';
-                        document.body.style.overflow = '';
-                        if (audioBtn) audioBtn.style.display = 'flex';
-                    }, 700);
-                }, 380);
-            }
-        }, 10000);
-
-        // ── AUDIO TOGGLE BUTTON ──
+        // ── AUDIO TOGGLE ──
         if (audioBtn) {
             audioBtn.addEventListener('click', function () {
                 muted = !muted;
                 sendCmd(muted ? 'mute' : 'unMute');
-                audioIcon.textContent = muted ? '🔇' : '🔊';
+                if (audioIcon) audioIcon.textContent = muted ? '🔇' : '🔊';
             });
         }
     })();
