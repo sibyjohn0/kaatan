@@ -24,6 +24,7 @@
         }
     </script>
 
+    <script src="https://www.youtube.com/iframe_api"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Noto+Sans+Tamil:wght@700&family=Noto+Sans+Devanagari:wght@700&display=swap" rel="stylesheet">
@@ -1399,7 +1400,7 @@
             letter-spacing: 0.18em;
             text-transform: uppercase;
             cursor: pointer;
-            display: none;
+            display: flex;
             align-items: center;
             gap: 0.5rem;
             transition: border-color 0.3s, background 0.3s;
@@ -1426,7 +1427,7 @@
     <div class="splash-flare" id="splashFlare"></div>
 </div>
 
-<!-- AUDIO TOGGLE -->
+<!-- AUDIO TOGGLE — always visible -->
 <button id="audioToggle" aria-label="Toggle audio" class="muted-state">
     <span id="audioIcon">&#128263;</span>
     <span id="audioLabel">Tap to unmute</span>
@@ -1466,7 +1467,7 @@
     <div class="video-bg">
         <iframe
             id="heroIframe"
-            src="https://www.youtube.com/embed/NnNWp4HNBnQ?autoplay=1&mute=1&loop=1&playlist=NnNWp4HNBnQ&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&playsinline=1&disablekb=1&enablejsapi=1"
+            src="https://www.youtube.com/embed/NnNWp4HNBnQ?autoplay=1&mute=1&loop=1&playlist=NnNWp4HNBnQ&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&playsinline=1&disablekb=1&enablejsapi=1&origin=https://sibyjohn0.github.io"
             frameborder="0"
             allow="autoplay; fullscreen"
             allowfullscreen>
@@ -1908,7 +1909,6 @@
                 setTimeout(function () {
                     splash.style.display = 'none';
                     document.body.style.overflow = '';
-                    if (audioBtn) audioBtn.style.display = 'flex';
                 }, 700);
             }, 400);
         }
@@ -1920,8 +1920,12 @@
             setTimeout(openSite, 2500);
         }, 2000);
 
-        // Try to unmute immediately (works on Chrome for returning visitors)
-        setTimeout(function () { sendCmd('unMute'); }, 500);
+        // Try to unmute immediately via YT Player API (works on Chrome return visits)
+        setTimeout(function () {
+            if (window.ytPlayer && typeof window.ytPlayer.unMute === 'function') {
+                window.ytPlayer.unMute();
+            }
+        }, 800);
 
         function setUnmuted() {
             muted = false;
@@ -1936,10 +1940,12 @@
             if (audioBtn) audioBtn.classList.add('muted-state');
         }
 
-        // Try on first scroll/click (works on desktop Chrome, Android Chrome)
+        // Try on first natural interaction (scroll, click, touch)
         function firstInteraction() {
             if (!muted) return;
-            sendCmd('unMute');
+            if (window.ytPlayer && typeof window.ytPlayer.unMute === 'function') {
+                window.ytPlayer.unMute();
+            }
             setUnmuted();
             document.removeEventListener('click', firstInteraction);
             document.removeEventListener('touchend', firstInteraction);
@@ -1949,42 +1955,46 @@
         document.addEventListener('touchend', firstInteraction, { passive: true });
         document.addEventListener('scroll', firstInteraction, { passive: true });
 
-        // ── AUDIO TOGGLE (explicit button — works everywhere including iOS) ──
+        // ── AUDIO TOGGLE ──
         if (audioBtn) {
             audioBtn.addEventListener('click', function (e) {
                 e.stopPropagation();
                 if (muted) {
-                    sendCmd('unMute');
+                    if (window.ytPlayer && typeof window.ytPlayer.unMute === 'function') window.ytPlayer.unMute();
                     setUnmuted();
                     document.removeEventListener('click', firstInteraction);
                     document.removeEventListener('touchend', firstInteraction);
                     document.removeEventListener('scroll', firstInteraction);
                 } else {
-                    sendCmd('mute');
+                    if (window.ytPlayer && typeof window.ytPlayer.mute === 'function') window.ytPlayer.mute();
                     setMuted();
                 }
             });
         }
     })();
 
-    // ── YOUTUBE: loop on end + block end-screen state ──
-    window.addEventListener('message', function (e) {
-        try {
-            var data = JSON.parse(e.data);
-            // state 0 = ended → seek back to start and play
-            if (data.event === 'infoDelivery' && data.info && data.info.playerState === 0) {
-                var iframe = document.getElementById('heroIframe');
-                if (iframe) {
-                    iframe.contentWindow.postMessage(
-                        JSON.stringify({ event: 'command', func: 'seekTo', args: [0, true] }), '*'
-                    );
-                    iframe.contentWindow.postMessage(
-                        JSON.stringify({ event: 'command', func: 'playVideo', args: [] }), '*'
-                    );
+    // ── YOUTUBE PLAYER API ──
+    window.onYouTubeIframeAPIReady = function () {
+        window.ytPlayer = new YT.Player('heroIframe', {
+            events: {
+                onReady: function (e) {
+                    e.target.mute();
+                    e.target.playVideo();
+                },
+                onStateChange: function (e) {
+                    // State 0 = ended — restart immediately before end-screen appears
+                    if (e.data === 0) {
+                        e.target.seekTo(0, true);
+                        e.target.playVideo();
+                    }
+                    // State -1 = unstarted (sometimes needs a nudge)
+                    if (e.data === -1) {
+                        e.target.playVideo();
+                    }
                 }
             }
-        } catch (err) {}
-    });
+        });
+    };
 </script>
 </body>
 </html>
