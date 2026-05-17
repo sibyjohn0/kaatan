@@ -243,8 +243,6 @@
             opacity: 0;
             animation: fadeUp 1s ease 0.9s forwards;
             color: var(--cream);
-            perspective: 900px;
-            perspective-origin: 50% 50%;
         }
         .glitch {
             position: relative;
@@ -262,48 +260,43 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             animation: kaatanFlow 8s linear 2s infinite;
-            transform-origin: center center;
             text-shadow:
                 1px 1px 0 rgba(90,20,5,0.55),
                 2px 2px 0 rgba(70,12,3,0.45),
                 3px 3px 0 rgba(50,8,2,0.35),
                 4px 5px 20px rgba(0,0,0,0.75);
         }
-        /* alternate language states — Tamil / Hindi */
-        .glitch.lang-alt {
-            background: none;
-            -webkit-text-fill-color: var(--gold);
-            animation: none;
-            filter: drop-shadow(0 0 22px rgba(212,146,14,0.4)) drop-shadow(2px 5px 0 rgba(50,10,2,0.8));
-            letter-spacing: 0.04em;
-            text-shadow: none;
-        }
-        .glitch.lang-alt::before,
-        .glitch.lang-alt::after {
-            opacity: 0 !important;
-            animation: none !important;
-        }
         .glitch::before,
         .glitch::after {
-            content: attr(data-text);
             position: absolute;
             top: 0; left: 0;
             width: 100%; height: 100%;
             background: none;
             -webkit-background-clip: initial;
             background-clip: initial;
+            white-space: nowrap;
+            overflow: hidden;
         }
+        /* Tamil — shows as glitch slice across top portion */
         .glitch::before {
+            content: 'காட்டன்';
+            font-family: 'Noto Sans Tamil', sans-serif;
+            font-size: 0.66em;
+            line-height: 1.25;
             color: var(--gold);
             -webkit-text-fill-color: var(--gold);
-            animation: glitch1 5s infinite;
-            clip-path: polygon(0 0, 100% 0, 100% 38%, 0 38%);
+            animation: glitch1 4.5s infinite;
+            clip-path: polygon(0 0, 100% 0, 100% 42%, 0 42%);
         }
+        /* Hindi — shows as glitch slice across bottom portion */
         .glitch::after {
+            content: 'काटान';
+            font-family: 'Noto Sans Devanagari', sans-serif;
+            font-size: 0.8em;
             color: var(--red);
             -webkit-text-fill-color: var(--red);
-            animation: glitch2 5s infinite;
-            clip-path: polygon(0 62%, 100% 62%, 100% 100%, 0 100%);
+            animation: glitch2 4.5s infinite;
+            clip-path: polygon(0 58%, 100% 58%, 100% 100%, 0 100%);
         }
         .hero-divider {
             display: flex;
@@ -780,18 +773,24 @@
             50%       { opacity: 1; }
         }
         @keyframes glitch1 {
-            0%,88%,100% { transform: translate(0); opacity: 0; }
-            89%  { transform: translate(-3px, 1px);  opacity: 0.7; }
-            91%  { transform: translate(3px, -1px);  opacity: 0; }
-            93%  { transform: translate(-2px, 2px);  opacity: 0.7; }
-            95%  { transform: translate(0);           opacity: 0; }
+            0%,65%,100% { transform: translate(0); opacity: 0; }
+            66%  { transform: translate(-7px, 2px);  opacity: 1; }
+            67%  { transform: translate(5px, -2px);  opacity: 0; }
+            68%  { transform: translate(-5px, 3px);  opacity: 1; }
+            69%  { transform: translate(4px, -1px);  opacity: 0; }
+            70%  { transform: translate(0);           opacity: 0; }
+            79%  { transform: translate(-3px, 1px);  opacity: 0.85; }
+            80%  { transform: translate(2px, -1px);  opacity: 0; }
         }
         @keyframes glitch2 {
-            0%,82%,100% { transform: translate(0); opacity: 0; }
-            83%  { transform: translate(3px, 1px);   opacity: 0.7; }
-            85%  { transform: translate(-3px, -1px); opacity: 0; }
-            87%  { transform: translate(2px, -2px);  opacity: 0.7; }
-            89%  { transform: translate(0);           opacity: 0; }
+            0%,71%,100% { transform: translate(0); opacity: 0; }
+            72%  { transform: translate(8px, 1px);   opacity: 1; }
+            73%  { transform: translate(-6px, -2px); opacity: 0; }
+            74%  { transform: translate(6px, 2px);   opacity: 1; }
+            75%  { transform: translate(-4px, -1px); opacity: 0; }
+            76%  { transform: translate(0);           opacity: 0; }
+            85%  { transform: translate(3px, -1px);  opacity: 0.75; }
+            86%  { transform: translate(-2px, 1px);  opacity: 0; }
         }
 
         /* Scroll reveal */
@@ -1089,9 +1088,72 @@
             align-items: center;
             flex-shrink: 0;
         }
+
+        /* ── SPLASH SCREEN ── */
+        #splash {
+            position: fixed;
+            inset: 0;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg);
+            overflow: hidden;
+            transition: opacity 0.65s ease;
+        }
+        #splash.out { opacity: 0; pointer-events: none; }
+
+        .splash-glow {
+            position: absolute;
+            width: clamp(260px, 55vmin, 460px);
+            height: clamp(260px, 55vmin, 460px);
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(212,146,14,0.5) 0%, rgba(201,59,30,0.18) 50%, transparent 72%);
+            animation: splashGlow 1.8s ease-in-out 0.8s infinite;
+            z-index: 1;
+            pointer-events: none;
+        }
+        .splash-img {
+            width: clamp(200px, 42vmin, 360px);
+            height: clamp(200px, 42vmin, 360px);
+            border-radius: 50%;
+            position: relative;
+            z-index: 2;
+            opacity: 0;
+            transform: scale(0.55);
+            animation: splashMedallionIn 0.75s cubic-bezier(0.34,1.56,0.64,1) 0.25s forwards;
+        }
+        .splash-flare {
+            position: absolute;
+            top: 50%; left: 50%;
+            /* large circle centred on viewport */
+            width: 140vmax; height: 140vmax;
+            transform: translate(-50%, -50%) scale(0);
+            border-radius: 50%;
+            background: radial-gradient(circle, #FBE27A 0%, #D4920E 40%, #C93B1E 68%, transparent 85%);
+            z-index: 3;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        @keyframes splashMedallionIn {
+            0%   { opacity: 0; transform: scale(0.55); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        @keyframes splashGlow {
+            0%, 100% { transform: scale(0.88); opacity: 0.45; }
+            50%       { transform: scale(1.3);  opacity: 1; }
+        }
     </style>
 </head>
 <body>
+
+<!-- SPLASH SCREEN -->
+<div id="splash">
+    <div class="splash-glow"></div>
+    <div class="splash-flare" id="splashFlare"></div>
+    <img class="splash-img" src="rose-medallion.png" alt="">
+</div>
 
 <div id="cursor-dot"></div>
 <div id="cursor-ring"></div>
@@ -1516,49 +1578,36 @@
         }, 1400);
     }
 
-    // ── KAATAN TITLE LANGUAGE FLIP ──
-    const LANG_CYCLE = [
-        { text: 'KAATAN',   font: "'Bebas Neue', sans-serif",         alt: false, size: '' },
-        { text: 'காட்டன்',  font: "'Noto Sans Tamil', sans-serif",    alt: true,  size: 'clamp(3.5rem, 12vw, 11rem)' },
-        { text: 'काटान',    font: "'Noto Sans Devanagari', sans-serif", alt: true,  size: 'clamp(4rem, 13vw, 13rem)' },
-    ];
-    let langIdx = 0;
+    // ── SPLASH SCREEN ──
+    (function () {
+        const splash = document.getElementById('splash');
+        const flare  = document.getElementById('splashFlare');
+        if (!splash) return;
 
-    function cycleLang() {
-        const glitch = document.querySelector('.glitch');
-        if (!glitch) return;
+        // Only show once per session
+        if (sessionStorage.getItem('splashSeen')) {
+            splash.style.display = 'none';
+            return;
+        }
+        sessionStorage.setItem('splashSeen', '1');
+        document.body.style.overflow = 'hidden';
 
-        // flip out — rotate forward (bottom edge comes toward viewer)
-        glitch.style.transition = 'transform 0.38s cubic-bezier(0.4,0,1,1)';
-        glitch.style.transform  = 'rotateX(90deg)';
+        setTimeout(function () {
+            // Gold flare bursts from centre outward
+            flare.style.transition = 'transform 0.75s cubic-bezier(0.2,0,0.3,1), opacity 0.75s ease';
+            flare.style.transform  = 'translate(-50%,-50%) scale(1)';
+            flare.style.opacity    = '1';
 
-        setTimeout(() => {
-            langIdx = (langIdx + 1) % LANG_CYCLE.length;
-            const lang = LANG_CYCLE[langIdx];
-
-            glitch.textContent = lang.text;
-            glitch.setAttribute('data-text', lang.text);
-            glitch.style.fontFamily = lang.font;
-            glitch.style.fontSize   = lang.size;
-
-            if (lang.alt) {
-                glitch.classList.add('lang-alt');
-            } else {
-                glitch.classList.remove('lang-alt');
-            }
-
-            // position at top of flip arc, then animate in
-            glitch.style.transition = 'none';
-            glitch.style.transform  = 'rotateX(-90deg)';
-            glitch.offsetHeight;   // force reflow
-
-            glitch.style.transition = 'transform 0.42s cubic-bezier(0,0,0.6,1)';
-            glitch.style.transform  = 'rotateX(0deg)';
-        }, 400);
-    }
-
-    // start after hero entrance animation settles
-    setTimeout(() => setInterval(cycleLang, 3800), 4500);
+            // After flare covers screen, dissolve splash to reveal site
+            setTimeout(function () {
+                splash.classList.add('out');
+                setTimeout(function () {
+                    splash.style.display = 'none';
+                    document.body.style.overflow = '';
+                }, 700);
+            }, 380);
+        }, 2300);
+    })();
 </script>
 </body>
 </html>
