@@ -190,10 +190,9 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 177.78vh;
-            height: 100vh;
-            min-width: 100%;
-            min-height: 56.25vw;
+            /* max() guarantees full coverage at any aspect ratio without relying on min-width on iframe */
+            width: max(177.78vh, 100vw);
+            height: max(100vh, 56.25vw);
             pointer-events: none;
         }
 .hero-overlay {
@@ -215,8 +214,6 @@
             inset: 0;
             z-index: 1;
             background:
-                radial-gradient(ellipse at 0% 50%, rgba(201,59,30,0.18) 0%, transparent 60%),
-                radial-gradient(ellipse at 100% 50%, rgba(10,122,112,0.12) 0%, transparent 60%),
                 radial-gradient(ellipse at 50% 100%, rgba(28,16,56,0.45) 0%, transparent 55%);
             pointer-events: none;
         }
