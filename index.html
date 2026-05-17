@@ -248,54 +248,64 @@
         .glitch {
             position: relative;
             display: inline-block;
+            /* Bright circus gold → white → orange → bright pink */
             background: linear-gradient(90deg,
-                var(--gold)  0%,
-                var(--cream) 18%,
-                var(--red)   38%,
-                var(--gold)  58%,
-                var(--pink)  78%,
-                var(--gold)  100%
+                #F7C520  0%,
+                #FFFFFF  14%,
+                #FFA040  30%,
+                #F7C520  48%,
+                #FFFFFF  62%,
+                #FF8C69  76%,
+                #F7C520  100%
             );
-            background-size: 280% 100%;
+            background-size: 300% 100%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            animation: kaatanFlow 8s linear 2s infinite;
+            animation: kaatanFlow 7s linear 1.5s infinite;
+            /* lighter emboss — warm amber shadow, not dark brown */
             text-shadow:
-                1px 1px 0 rgba(90,20,5,0.55),
-                2px 2px 0 rgba(70,12,3,0.45),
-                3px 3px 0 rgba(50,8,2,0.35),
-                4px 5px 20px rgba(0,0,0,0.75);
+                1px 1px 0 rgba(180,90,0,0.5),
+                2px 2px 0 rgba(140,60,0,0.4),
+                3px 4px 14px rgba(0,0,0,0.6);
+        }
+        /* glitch transition — runs alongside kaatanFlow */
+        .glitch.switching {
+            animation: kaatanFlow 7s linear 1.5s infinite, glitchSwitch 0.55s ease-out forwards;
+        }
+        @keyframes glitchSwitch {
+            0%   { transform: translate(0)          skewX(0);    opacity: 1;   }
+            8%   { transform: translate(-9px, 1px)  skewX(-4deg); opacity: 0.8; }
+            16%  { transform: translate(11px,-1px)  skewX(4deg);  opacity: 0.3; }
+            24%  { transform: translate(-8px, 2px)  skewX(-3deg); opacity: 0.7; }
+            32%  { transform: translate(10px,-2px)  skewX(3deg);  opacity: 0.15;}
+            40%  { transform: translate(0)          skewX(0);    opacity: 0;   }
+            50%  { transform: translate(0)          skewX(0);    opacity: 0;   }
+            60%  { transform: translate(-10px,-1px) skewX(-4deg); opacity: 0.3; }
+            70%  { transform: translate(12px, 1px)  skewX(4deg);  opacity: 0.6; }
+            80%  { transform: translate(-5px, 1px)  skewX(-2deg); opacity: 0.88;}
+            90%  { transform: translate(3px,-1px)   skewX(1deg);  opacity: 0.96;}
+            100% { transform: translate(0)          skewX(0);    opacity: 1;   }
         }
         .glitch::before,
         .glitch::after {
+            content: attr(data-text);
             position: absolute;
             top: 0; left: 0;
             width: 100%; height: 100%;
             background: none;
             -webkit-background-clip: initial;
             background-clip: initial;
-            white-space: nowrap;
-            overflow: hidden;
         }
-        /* Tamil — shows as glitch slice across top portion */
         .glitch::before {
-            content: 'காட்டன்';
-            font-family: 'Noto Sans Tamil', sans-serif;
-            font-size: 0.66em;
-            line-height: 1.25;
-            color: var(--gold);
-            -webkit-text-fill-color: var(--gold);
+            color: #F7C520;
+            -webkit-text-fill-color: #F7C520;
             animation: glitch1 4.5s infinite;
             clip-path: polygon(0 0, 100% 0, 100% 42%, 0 42%);
         }
-        /* Hindi — shows as glitch slice across bottom portion */
         .glitch::after {
-            content: 'काटान';
-            font-family: 'Noto Sans Devanagari', sans-serif;
-            font-size: 0.8em;
-            color: var(--red);
-            -webkit-text-fill-color: var(--red);
+            color: var(--pink);
+            -webkit-text-fill-color: var(--pink);
             animation: glitch2 4.5s infinite;
             clip-path: polygon(0 58%, 100% 58%, 100% 100%, 0 100%);
         }
@@ -1578,6 +1588,42 @@
             type();
         }, 1400);
     }
+
+    // ── KAATAN TITLE LANGUAGE CYCLE (glitch transition) ──
+    (function () {
+        const LANGS = [
+            { text: 'KAATAN',  font: "'Bebas Neue', sans-serif",            size: '',                        spacing: '0.05em', hold: 4200 },
+            { text: 'காட்டன்', font: "'Noto Sans Tamil', sans-serif",       size: 'clamp(3.2rem,11vw,10rem)', spacing: '0.02em', hold: 3400 },
+            { text: 'काटान',   font: "'Noto Sans Devanagari', sans-serif",   size: 'clamp(4rem,13.5vw,13rem)', spacing: '0.03em', hold: 3400 },
+        ];
+        let idx = 0;
+
+        function switchLang() {
+            const el = document.querySelector('.glitch');
+            if (!el) return;
+
+            el.classList.add('switching');
+
+            // swap text at opacity-0 midpoint (40% of 550ms)
+            setTimeout(function () {
+                idx = (idx + 1) % LANGS.length;
+                const lang = LANGS[idx];
+                el.textContent        = lang.text;
+                el.setAttribute('data-text', lang.text);
+                el.style.fontFamily   = lang.font;
+                el.style.fontSize     = lang.size;
+                el.style.letterSpacing = lang.spacing;
+            }, 220);
+
+            setTimeout(function () {
+                el.classList.remove('switching');
+                setTimeout(switchLang, LANGS[idx].hold);
+            }, 570);
+        }
+
+        // start after hero entrance animation settles
+        setTimeout(switchLang, LANGS[0].hold);
+    })();
 
     // ── SPLASH SCREEN ──
     (function () {
