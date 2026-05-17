@@ -26,7 +26,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Noto+Sans+Tamil:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Noto+Sans+Tamil:wght@700&family=Noto+Sans+Devanagari:wght@700&display=swap" rel="stylesheet">
     <style>
         :root {
             /* Palette drawn from the Young Hearts music video */
@@ -39,6 +39,7 @@
             --white:    #FFFFFF;
             --dim:      rgba(245,230,200,0.85);
             --border:   rgba(212,146,14,0.32);   /* gold-tinted border */
+            --indigo:   #1C1038;               /* deep space purple from Young Hearts video */
         }
 
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -214,7 +215,8 @@
             z-index: 1;
             background:
                 radial-gradient(ellipse at 0% 50%, rgba(201,59,30,0.18) 0%, transparent 60%),
-                radial-gradient(ellipse at 100% 50%, rgba(10,122,112,0.12) 0%, transparent 60%);
+                radial-gradient(ellipse at 100% 50%, rgba(10,122,112,0.12) 0%, transparent 60%),
+                radial-gradient(ellipse at 50% 100%, rgba(28,16,56,0.45) 0%, transparent 55%);
             pointer-events: none;
         }
         .hero-content {
@@ -241,6 +243,8 @@
             opacity: 0;
             animation: fadeUp 1s ease 0.9s forwards;
             color: var(--cream);
+            perspective: 900px;
+            perspective-origin: 50% 50%;
         }
         .glitch {
             position: relative;
@@ -258,6 +262,26 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             animation: kaatanFlow 8s linear 2s infinite;
+            transform-origin: center center;
+            text-shadow:
+                1px 1px 0 rgba(90,20,5,0.55),
+                2px 2px 0 rgba(70,12,3,0.45),
+                3px 3px 0 rgba(50,8,2,0.35),
+                4px 5px 20px rgba(0,0,0,0.75);
+        }
+        /* alternate language states — Tamil / Hindi */
+        .glitch.lang-alt {
+            background: none;
+            -webkit-text-fill-color: var(--gold);
+            animation: none;
+            filter: drop-shadow(0 0 22px rgba(212,146,14,0.4)) drop-shadow(2px 5px 0 rgba(50,10,2,0.8));
+            letter-spacing: 0.04em;
+            text-shadow: none;
+        }
+        .glitch.lang-alt::before,
+        .glitch.lang-alt::after {
+            opacity: 0 !important;
+            animation: none !important;
         }
         .glitch::before,
         .glitch::after {
@@ -389,7 +413,7 @@
             align-items: start;
         }
         .about-title {
-            background: linear-gradient(140deg, var(--cream) 0%, var(--gold) 35%, var(--red) 65%, var(--pink) 100%);
+            background: linear-gradient(140deg, var(--indigo) 0%, var(--cream) 22%, var(--gold) 42%, var(--red) 65%, var(--pink) 85%, var(--indigo) 100%);
             background-size: 220% 220%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -631,12 +655,12 @@
             position: absolute;
             bottom: -20%; left: -10%;
             width: 400px; height: 400px;
-            background: radial-gradient(circle, rgba(10,122,112,0.08) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(28,16,56,0.35) 0%, transparent 70%);
             pointer-events: none;
         }
         .collab-intro { max-width: 680px; margin-bottom: 4rem; }
         .collab-title {
-            background: linear-gradient(140deg, var(--gold) 0%, var(--cream) 40%, var(--red) 80%, var(--gold) 100%);
+            background: linear-gradient(140deg, var(--indigo) 0%, var(--gold) 28%, var(--cream) 50%, var(--red) 72%, var(--indigo) 100%);
             background-size: 220% 220%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -919,6 +943,8 @@
         .rangoli-bg {
             background-image: radial-gradient(rgba(212,146,14,0.07) 1.5px, transparent 1.5px);
             background-size: 26px 26px;
+            /* indigo depth layer for the universe section */
+            box-shadow: inset 0 0 120px rgba(28,16,56,0.45);
         }
 
         /* ── CUSTOM CURSOR ── */
@@ -978,13 +1004,14 @@
 
         [data-letters].gradient-active {
             background: linear-gradient(90deg,
-                var(--gold)  0%,
-                var(--red)   20%,
-                var(--cream) 38%,
-                var(--pink)  55%,
-                var(--red)   72%,
-                var(--gold)  88%,
-                var(--cream) 100%
+                var(--indigo) 0%,
+                var(--gold)   12%,
+                var(--red)    28%,
+                var(--cream)  45%,
+                var(--pink)   60%,
+                var(--red)    75%,
+                var(--gold)   88%,
+                var(--indigo) 100%
             );
             background-size: 300% 100%;
             -webkit-background-clip: text;
@@ -1011,6 +1038,32 @@
             100% { left: 150%; }
         }
 
+        /* ── ROSE MEDALLION ── */
+        .rose-medallion {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px; height: 30px;
+            border-radius: 50%;
+            background: var(--teal);
+            border: 2px solid var(--gold);
+            box-shadow: 0 0 0 2px rgba(212,146,14,0.3), inset 0 0 0 3px rgba(212,146,14,0.15);
+            font-size: 0.95rem;
+            line-height: 1;
+            color: var(--pink);
+            flex-shrink: 0;
+            position: relative;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+        /* dashed tick-mark ring around medallion */
+        .rose-medallion::before {
+            content: '';
+            position: absolute;
+            inset: -5px;
+            border-radius: 50%;
+            border: 1.5px dashed rgba(212,146,14,0.5);
+        }
+
         /* ── SECTION DIVIDERS ── */
         .section-divider {
             display: flex;
@@ -1034,19 +1087,7 @@
         .div-gem {
             display: flex;
             align-items: center;
-            gap: 0.65rem;
             flex-shrink: 0;
-        }
-        .div-gem span {
-            display: block;
-            width: 5px; height: 5px;
-            background: rgba(245,197,24,0.5);
-            border-radius: 50%;
-        }
-        .div-gem::before {
-            content: '◆';
-            font-size: 0.55rem;
-            color: rgba(245,197,24,0.7);
         }
     </style>
 </head>
@@ -1112,7 +1153,7 @@
 <div class="section-divider" aria-hidden="true">
     <div class="div-row">
         <span class="div-rule"></span>
-        <span class="div-gem"><span></span></span>
+        <span class="div-gem"><span class="rose-medallion">✿</span></span>
         <span class="div-rule"></span>
     </div>
 </div>
@@ -1164,7 +1205,7 @@
 <div class="section-divider" aria-hidden="true">
     <div class="div-row">
         <span class="div-rule"></span>
-        <span class="div-gem"><span></span></span>
+        <span class="div-gem"><span class="rose-medallion">✿</span></span>
         <span class="div-rule"></span>
     </div>
 </div>
@@ -1208,7 +1249,7 @@
 <div class="section-divider" aria-hidden="true">
     <div class="div-row">
         <span class="div-rule"></span>
-        <span class="div-gem"><span></span></span>
+        <span class="div-gem"><span class="rose-medallion">✿</span></span>
         <span class="div-rule"></span>
     </div>
 </div>
@@ -1266,7 +1307,7 @@
 <div class="section-divider" aria-hidden="true">
     <div class="div-row">
         <span class="div-rule"></span>
-        <span class="div-gem"><span></span></span>
+        <span class="div-gem"><span class="rose-medallion">✿</span></span>
         <span class="div-rule"></span>
     </div>
 </div>
@@ -1417,7 +1458,7 @@
         [...el.childNodes].forEach(walk);
     }
 
-    const LETTER_PALETTE = ['#D4920E', '#C93B1E', '#F5E6C8', '#E8907A', '#C93B1E', '#D4920E'];
+    const LETTER_PALETTE = ['#2A1850', '#D4920E', '#C93B1E', '#F5E6C8', '#E8907A', '#D4920E', '#2A1850'];
 
     function revealLetters(el) {
         const letters = el.querySelectorAll('.split-letter');
@@ -1474,6 +1515,50 @@
             type();
         }, 1400);
     }
+
+    // ── KAATAN TITLE LANGUAGE FLIP ──
+    const LANG_CYCLE = [
+        { text: 'KAATAN',   font: "'Bebas Neue', sans-serif",         alt: false, size: '' },
+        { text: 'காட்டன்',  font: "'Noto Sans Tamil', sans-serif",    alt: true,  size: 'clamp(3.5rem, 12vw, 11rem)' },
+        { text: 'काटान',    font: "'Noto Sans Devanagari', sans-serif", alt: true,  size: 'clamp(4rem, 13vw, 13rem)' },
+    ];
+    let langIdx = 0;
+
+    function cycleLang() {
+        const glitch = document.querySelector('.glitch');
+        if (!glitch) return;
+
+        // flip out — rotate forward (bottom edge comes toward viewer)
+        glitch.style.transition = 'transform 0.38s cubic-bezier(0.4,0,1,1)';
+        glitch.style.transform  = 'rotateX(90deg)';
+
+        setTimeout(() => {
+            langIdx = (langIdx + 1) % LANG_CYCLE.length;
+            const lang = LANG_CYCLE[langIdx];
+
+            glitch.textContent = lang.text;
+            glitch.setAttribute('data-text', lang.text);
+            glitch.style.fontFamily = lang.font;
+            glitch.style.fontSize   = lang.size;
+
+            if (lang.alt) {
+                glitch.classList.add('lang-alt');
+            } else {
+                glitch.classList.remove('lang-alt');
+            }
+
+            // position at top of flip arc, then animate in
+            glitch.style.transition = 'none';
+            glitch.style.transform  = 'rotateX(-90deg)';
+            glitch.offsetHeight;   // force reflow
+
+            glitch.style.transition = 'transform 0.42s cubic-bezier(0,0,0.6,1)';
+            glitch.style.transform  = 'rotateX(0deg)';
+        }, 400);
+    }
+
+    // start after hero entrance animation settles
+    setTimeout(() => setInterval(cycleLang, 3800), 4500);
 </script>
 </body>
 </html>
