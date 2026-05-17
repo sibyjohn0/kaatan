@@ -860,11 +860,31 @@
             position: absolute;
             top: -20%; left: -120%;
             width: 65%; height: 140%;
-            background: linear-gradient(105deg, transparent 20%, rgba(245,197,24,0.2) 50%, transparent 80%);
+            background: linear-gradient(105deg, transparent 20%, rgba(212,146,14,0.22) 50%, transparent 80%);
             transform: skewX(-15deg);
             pointer-events: none;
         }
         [data-letters].shimmer::after { animation: titleShimmer 1s ease-out forwards; }
+
+        [data-letters].gradient-active {
+            background: linear-gradient(90deg,
+                var(--gold)  0%,
+                var(--red)   22%,
+                var(--pink)  44%,
+                var(--teal)  66%,
+                var(--gold)  88%,
+                var(--cream) 100%
+            );
+            background-size: 280% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: headerFlow 12s linear infinite;
+        }
+        @keyframes headerFlow {
+            0%   { background-position: 0% 0%; }
+            100% { background-position: 100% 0%; }
+        }
 
         /* ── NEW KEYFRAMES ── */
         @keyframes kaatanFlow {
@@ -1265,7 +1285,7 @@
         [...el.childNodes].forEach(walk);
     }
 
-    const LETTER_PALETTE = ['#F5C518', '#E8698A', '#C93B1E', '#F5E6C8', '#0A7A70', '#F5C518'];
+    const LETTER_PALETTE = ['#D4920E', '#E8907A', '#C93B1E', '#F5E6C8', '#0F7050', '#D4920E'];
 
     function revealLetters(el) {
         const letters = el.querySelectorAll('.split-letter');
@@ -1276,14 +1296,18 @@
             setTimeout(() => ltr.classList.add('in'), i * 38);
         });
         const cascadeEnd = count * 38 + 80;
-        // Shimmer sweep after cascade
+        // Shimmer sweep
         setTimeout(() => el.classList.add('shimmer'), cascadeEnd);
-        // Fade all letters to gold — makes headers pop on dark bg
+        // Fade letters to gold, then hand off to CSS gradient animation
         setTimeout(() => {
             letters.forEach(ltr => {
                 ltr.style.transition = 'color 1.4s ease';
                 ltr.style.color = 'var(--gold)';
             });
+            setTimeout(() => {
+                letters.forEach(ltr => { ltr.style.color = ''; ltr.style.transition = ''; });
+                el.classList.add('gradient-active');
+            }, 1500);
         }, cascadeEnd + 500);
     }
 
