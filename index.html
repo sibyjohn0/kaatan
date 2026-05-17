@@ -1325,7 +1325,41 @@
             opacity: 0;
             transition: opacity 0.9s ease;
         }
-        .splash-sigil-wrap.in { opacity: 1; }
+        .splash-sigil-wrap.in { opacity: 1; cursor: pointer; }
+
+        .splash-play-hint {
+            position: absolute;
+            bottom: 8%;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.6s ease;
+            white-space: nowrap;
+        }
+        .splash-play-hint.shown { opacity: 1; animation: tapPulse 2s ease-in-out infinite; }
+        .splash-play-icon {
+            width: 32px; height: 32px;
+            border: 1px solid rgba(245,197,24,0.6);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.7rem;
+            color: var(--gold);
+        }
+        .splash-play-label {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(0.8rem, 2.5vw, 1rem);
+            letter-spacing: 0.45em;
+            color: rgba(245,197,24,0.7);
+        }
+        @keyframes tapPulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
 
         .splash-sigil-img {
             position: absolute;
@@ -1380,6 +1414,10 @@
     </div>
     <div class="splash-sigil-wrap" id="splashSigil">
         <img class="splash-sigil-img" src="kaatan-sigil.png" alt="">
+    </div>
+    <div class="splash-play-hint" id="splashPlayHint">
+        <div class="splash-play-icon">&#9654;</div>
+        <span class="splash-play-label">Tap to Play</span>
     </div>
     <div class="splash-flare" id="splashFlare"></div>
 </div>
@@ -1868,14 +1906,33 @@
             }, 400);
         }
 
-        // Phase 1 — Rose: 2.5s
-        // Phase 2 — Cross-fade to sigil: 2.5s dwell
-        // Phase 3 — Gold flare → site
+        const playHint = document.getElementById('splashPlayHint');
+        let tapped = false;
+
+        function tapToPlay() {
+            if (tapped) return;
+            tapped = true;
+            sendCmd('unMute');
+            muted = false;
+            if (audioIcon) audioIcon.textContent = '🔊';
+            openSite();
+        }
+
+        // Phase 1 — Rose: 2s
+        // Phase 2 — Cross-fade to sigil, wait for tap
         setTimeout(function () {
             rose.classList.add('out');
             sigil.classList.add('in');
-            setTimeout(openSite, 2500);
-        }, 2500);
+            // Show play hint after sigil fades in
+            setTimeout(function () {
+                if (playHint) playHint.classList.add('shown');
+            }, 950);
+            // Listen for tap anywhere on splash
+            splash.addEventListener('click', tapToPlay);
+            splash.addEventListener('touchend', function (e) { e.preventDefault(); tapToPlay(); });
+            // Fallback: auto-open after 8s without audio
+            setTimeout(function () { if (!tapped) { tapped = true; openSite(); } }, 8000);
+        }, 2000);
 
         // ── AUDIO TOGGLE ──
         if (audioBtn) {
