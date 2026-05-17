@@ -1922,8 +1922,7 @@
             setTimeout(openSite, 2500);
         }, 2000);
 
-        // Try to unmute immediately (works on Chrome for returning visitors)
-        setTimeout(function () { sendCmd('unMute'); }, 800);
+        // Browser policy blocks audio unmute before user gesture — handled by button + firstInteraction
 
         function setUnmuted() {
             muted = false;
@@ -1969,22 +1968,56 @@
         }
     })();
 
-    // ── LOOP GUARD — restart via postMessage when video ends (state=0) ──
-    window.addEventListener('message', function (e) {
-        try {
-            var data = JSON.parse(e.data);
-            if (data.event === 'infoDelivery' && data.info && data.info.playerState === 0) {
-                var iframe = document.getElementById('heroIframe');
-                if (!iframe) return;
-                iframe.contentWindow.postMessage(
-                    JSON.stringify({ event: 'command', func: 'seekTo', args: [0, true] }), '*'
-                );
-                iframe.contentWindow.postMessage(
-                    JSON.stringify({ event: 'command', func: 'playVideo', args: [] }), '*'
-                );
-            }
-        } catch (err) {}
-    });
+    // ── YOUTUBE LOOP GUARD ──
+    // YouTube only sends 'infoDelivery' events (not 'onStateChange') via postMessage.
+    // We must send {event:'listening'} first to activate the data stream.
+    // Then detect video end via progressState.current approaching duration.
+    (function () {
+        var ytIframe = document.getElementById('heroIframe');
+        if (!ytIframe) return;
+
+        var loopLock = false;
+
+        function ytCmd(fn, args) {
+            ytIframe.contentWindow.postMessage(
+                JSON.stringify({ event: 'command', func: fn, args: args || [] }), '*'
+            );
+        }
+
+        function activateListening() {
+            ytIframe.contentWindow.postMessage(JSON.stringify({ event: 'listening' }), '*');
+        }
+
+        // Send listening once iframe is loaded, then keep it alive
+        ytIframe.addEventListener('load', function () {
+            setTimeout(activateListening, 400);
+        });
+        // Also try on a delay in case iframe was already loaded
+        setTimeout(activateListening, 1500);
+
+        window.addEventListener('message', function (e) {
+            try {
+                var data = JSON.parse(e.data);
+
+                // Progress-based loop restart (only source of truth in postMessage API)
+                if (data.event === 'infoDelivery' && data.info && data.info.progressState) {
+                    var ps = data.info.progressState;
+                    if (ps.duration > 10 && ps.current >= ps.duration - 2 && !loopLock) {
+                        loopLock = true;
+                        ytCmd('seekTo', [0, true]);
+                        ytCmd('playVideo');
+                        setTimeout(function () { loopLock = false; }, 5000);
+                    }
+                }
+
+                // Belt-and-suspenders: some YouTube versions send onStateChange
+                if (data.event === 'onStateChange' && (data.info === 0 || data.info === '0')) {
+                    ytCmd('seekTo', [0, true]);
+                    ytCmd('playVideo');
+                }
+            } catch (err) {}
+        });
+    })();
 </script>
 </body>
 </html>
